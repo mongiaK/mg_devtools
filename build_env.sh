@@ -20,12 +20,13 @@ git_env()
     git config --global pager.branch false
     git config --global user.name mongia
     git config --global user.email mr_pengmj@outlook.com
+    git config --global credential.helper store
 }
 
 go_env()
 {
     # GOPROXY 配置go get 源，国内无法访问，必须配置goproxy
-    go env -w GOPROXY=https://goproxy.io,direct
+    go env -w GOPROXY=https://goproxy.cn
 
     # GOPRIVATE 指明域名为私有仓库，go get在处理该域名下的所有依赖时，会直接跳过goproxy和checksum等逻辑
     # go env -w GOPRIVATE=*.corp.example.com
