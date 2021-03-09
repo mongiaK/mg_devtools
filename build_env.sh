@@ -41,6 +41,15 @@ go_env()
     #    insteadOf = https://github.com/
 }
 
+node_env()
+{
+    if command -v npm >/dev/null 2>&1 ; then
+        if !command -v cnpm >/dev/null 2>&1 ; then
+            sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
+        fi
+    fi
+}
+
 bash_env()
 {
     if [ -z `grep 'mongia' $HOME/.bashrc` ]; then 
@@ -97,6 +106,8 @@ main()
     go_env 
 
     bash_env
+
+    node_env
 }
 
 main 
