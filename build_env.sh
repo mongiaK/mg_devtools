@@ -97,6 +97,22 @@ EOF
     else 
         log_warning "tmux.conf 文件不存在"
     fi
+
+    if [ -z `grep 'mongia' $HOME/.zshrc` ]; then 
+cat << EOF >> $HOME/.bashrc
+# mongia usage
+export TERM=xterm
+
+export SVN_EDITOR=vim
+export GIT_EDITOR=vim
+
+alias grep='grep --color'
+alias tmux='tmux -2'
+alias ls='ls --color=auto'
+alias vi='vim'
+alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+EOF
+    fi
 }
 
 main()
