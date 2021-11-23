@@ -35,15 +35,6 @@ if [ $EUID -ne 0 ]; then
     esac
 fi
 
-if [ -z `cat /etc/hosts | grep 'github'` ]; then
-sudo bash -c 'cat >> /etc/hosts << EOF
-
-52.74.223.119 github.com
-151.101.76.133 raw.githubusercontent.com
-
-EOF'
-fi
-
 check_result()
 {
     if [ $? -eq 0 ]; then
@@ -110,7 +101,7 @@ Ubuntu)
         check_result "tmux"
     fi
 
-    if command -v clang-format >/dev/ull 2>&1; then 
+    if command -v clang-format >/dev/null 2>&1; then 
         log_success "clang-format 已安装"
     else 
         sudo apt install -y clang-format 
@@ -160,25 +151,32 @@ CentOS)
     ;;
 esac
 
+build_dir=/tmp/vimenv
+mkdir -p ${build_dir}
+pushd ${build_dir}
+git clone https://hub.fastgit.org/junegunn/vim-plug.git
+git clone https://hub.fastgit.org/PengMengJia/vim.git
+popd
+
 if [ -e "$user/.vim/autoload/plug.vim" ]; then
     log_info "plug.vim 已存在"
 else
-    wget -P ~/.vim/autoload/ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    check_result "plug.vim"
+    mkdir -p ~/.vim/autoload
+    cp ${build_dir}/vim-plug/plug.vim ~/.vim/autoload/
 fi
 
 if [ -e "$user/.vimrc" ]; then
     log_info ".vimrc 已存在"
 else
-    wget -P ~/ https://raw.githubusercontent.com/PengMengJia/doc/master/develop_env_doc/.vimrc
-    check_result "vimrc"
+    cp ${build_dir}/vim/.vimrc ~/
 fi
 
 if [ -e "$user/.tmux.conf" ]; then
     log_info ".tmux.conf 已存在"
 else
-    wget -P ~/ https://raw.githubusercontent.com/PengMengJia/doc/master/develop_env_doc/.tmux.conf
-    check_result "tmux.conf"
+    cp ${build_dir}/vim/.tmux.conf ~/
 fi
+
+rm -rf ${build_dir}
 
 log_success "🙈 【install develop env success! ( open vim run :PlugInstall )】" 
