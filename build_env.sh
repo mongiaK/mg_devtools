@@ -11,7 +11,7 @@
 
 set -e
 
-source ./lib.sh
+source ./log.sh
 
 log_info "🙈 【build develop env. git, go, zsh ...!】"
 
@@ -55,7 +55,7 @@ bash_env()
     if [ -z `grep 'mongia' $HOME/.bashrc` ]; then 
 cat << EOF >> $HOME/.bashrc
 # mongia usage
-export TERM=xterm
+export TERM=xterm-256color
 
 export SVN_EDITOR=vim
 export GIT_EDITOR=vim
@@ -99,9 +99,9 @@ EOF
     fi
 
     if [ -z `grep 'mongia' $HOME/.zshrc` ]; then 
-cat << EOF >> $HOME/.bashrc
+cat << EOF >> $HOME/.zshrc
 # mongia usage
-export TERM=xterm
+export TERM=xterm-256color
 
 export SVN_EDITOR=vim
 export GIT_EDITOR=vim
