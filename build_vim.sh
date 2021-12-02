@@ -41,10 +41,6 @@ function check_result() {
         log_success "$1 安装成功"
     else
         log_error "$1 安装失败"
-        if [ "$1" == "ag" ]; then
-            log_warning "you can build source code for use, https://github.com/mizuno-as/silversearcher-ag "
-	        log_warning "maybe you can set aliyun mirror, https://developer.aliyun.com/mirror"
-        fi
         exit 1
     fi
 }
