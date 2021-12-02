@@ -8,7 +8,7 @@
 | ----   | ---- |
 | build_vim.sh | 构建终端vim开发环境，包含相应的一些工具库。基于vim version >= 8 的环境，低于这个版本不予安装 |
 | build_env.sh | 初始化一些常用的开发配置变量。按需安装。|
-| log.sh       | shell 打印log封装的函数 ｜
+| log.sh       | shell 打印log封装的函数 |
 | .vimrc       | 作者自己的vim配置，可按需拿去，vim低版本问题可询问作者解决 |
 | .tmux.conf   | tmux分屏配置文件 |
 
