@@ -13,18 +13,24 @@ set -e
 
 source ./log.sh
 
-log_info "🙈 【build develop env. git, go, zsh ...!】"
-
-git_env()
+set_git_env()
 {
+    if ! command -v git >/dev/null 2>&1 ; then
+        log_warning "git uninstall, please install and run this script!"
+        return
+    fi
     git config --global pager.branch false
     git config --global user.name mongia
     git config --global user.email mr_pengmj@outlook.com
     git config --global credential.helper store
 }
 
-go_env()
+set_go_env()
 {
+    if ! command -v go >/dev/null 2>&1; then
+        log_warning "go uninstall, please install and run this script!"
+        return
+    fi
     # GOPROXY 配置go get 源，国内无法访问，必须配置goproxy
     go env -w GOPROXY=https://goproxy.cn
 
@@ -39,67 +45,43 @@ go_env()
     # 通过ssh公钥访问私有仓库，需配置git拉取私有仓库时使用ssh而不是https，修改.gitconfig 
     # [url "git@github.com"]:
     #    insteadOf = https://github.com/
+
 }
 
-node_env()
+set_node_cnpm()
 {
     if command -v npm >/dev/null 2>&1 ; then
-        if !command -v cnpm >/dev/null 2>&1 ; then
+        if ! command -v cnpm >/dev/null 2>&1 ; then
             sudo npm install -g cnpm --registry=https://registry.npm.taobao.org
         fi
     fi
 }
 
-bash_env()
+shell_rc=""
+get_shell_file()
 {
-    if [ -z `grep 'mongia' $HOME/.bashrc` ]; then 
-cat << EOF >> $HOME/.bashrc
-# mongia usage
-export TERM=xterm-256color
-
-export SVN_EDITOR=vim
-export GIT_EDITOR=vim
-
-alias grep='grep --color'
-alias tmux='tmux -2'
-alias ls='ls --color=auto'
-alias vi='vim'
-alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
-EOF
-    fi
+    shell=${SHELL##*/}
+    case ${shell} in
+        zsh)
+            shell_rc=${HOME}/.zshrc
+            ;;
+        bash)
+            shell_rc=${HOME}/.bashrc
+            ;;
+        *)
+            log_warning "unsurport your shell, sorry!"
+            ;;
+    esac
+    log_info "your shell rc is ${shell_rc}"
 }
 
-zsh_env()
+set_shell_rc_config()
 {
-    if command -v zsh >/dev/null 2>&1 ; then 
-        if [ ! -d $HOME/.oh-my-zsh ]; then 
-            wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh 
-        else 
-            log_info "oh-my-zsh 已安装"
-        fi
-    else 
-        log_error "zsh is 未安装，请先安装zsh "
-        exit 0
-    fi 
-
-    sudo chsh -s /bin/zsh
-
-    if [ -e "$HOME/.tmux.conf" ]; then 
-        if [ -z `grep 'zsh' $HOME/.tmux.conf` ]; then 
-cat << EOF >> $HOME/.tmux.conf
-
-set -g default-shell /bin/zsh
-
-EOF
-        else 
-            log_info "已设置tmux默认的sh为zsh"
-        fi 
-    else 
-        log_warning "tmux.conf 文件不存在"
+    if grep 'mongia' ${shell_rc} >/dev/null 2>&1; then 
+        return
     fi
+cat << EOF >> ${shell_rc}
 
-    if [ -z `grep 'mongia' $HOME/.zshrc` ]; then 
-cat << EOF >> $HOME/.zshrc
 # mongia usage
 export TERM=xterm-256color
 
@@ -112,29 +94,23 @@ alias ls='ls --color=auto'
 alias vi='vim'
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 EOF
-    fi
 }
 
 main()
 {
-    git_env
+    log_info "build develop env. git, go, zsh ...!"
 
-    go_env 
+    set_go_env 
 
-    bash_env
+    set_git_env
 
-    node_env
+    set_node_cnpm
+
+    get_shell_file
+
+    set_shell_rc_config
+
+    log_info "install develop env success!" 
 }
 
 main 
-
-read -p "Do you want to use zsh and oh-my-zsh in current user?" result
-case $result in 
-Y | y | yes | YES | Yes)
-    zsh_env
-    ;;
-*)
-    ;;
-esac
-
-log_success "🙈 【install develop env success! 】" 

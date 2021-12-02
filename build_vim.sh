@@ -22,9 +22,9 @@ function check_vim_version {
 
 function check_user {
     if [ $EUID -ne 0 ]; then
-        log_warning "Warning: This script use sudo or root to install tools!" 1>&2
+        log_warning "Warning: This script use sudo or root to install tools!"
         log_warning "be sure you can run sudo or you have installed tmux, ag, wget, ctags!!!"
-        read -p "continue yes(Y) or not(N)" select
+        read -p "🙈 【continue yes(Y) or not(N)】" select
         case $select in
         Y | y | yes | YES | Yes)
             echo ""
@@ -36,8 +36,7 @@ function check_user {
     fi
 }
 
-check_result()
-{
+function check_result() {
     if [ $? -eq 0 ]; then
         log_success "$1 安装成功"
     else
@@ -49,6 +48,14 @@ check_result()
         exit 1
     fi
 }
+
+function check_command() {
+    if ! command -v $1 >/dev/null 2>&1 ; then
+        log_error "$1 not found, please be sure you have install this";
+        exit 1
+    fi
+}
+
 
 distributor_id=
 function get_os {
@@ -82,7 +89,7 @@ packages=
 exebin=
 pkgtools=
 condition=
-function init_packages {
+function prepare_packages {
     case $distributor_id in
     Ubuntu)
         packages=(silversearcher-ag ctags wget tmux clang-format)
@@ -102,10 +109,12 @@ function init_packages {
         pkgtools=brew
         ;;
     *)
-        log_warning "[`date -s`] not support this system yet, sorry!"
+        log_warning "not support this system yet, sorry!"
         exit 0
         ;;
     esac
+
+    check_command $pkgtools
 }
 
 function install_packages {
@@ -114,7 +123,7 @@ function install_packages {
         exit 1
     fi
 
-    for i in $(seq 0 ${#packages[@]}); do
+    for ((i=0; i < ${#packages[@]}; i++)); do
          if command -v ${exebin[$i]} >/dev/null 2>&1; then
              log_success "${exebin[$i]} 已安装"
          else
@@ -155,21 +164,21 @@ function copy_config_to_user_dir {
 }
 
 function main {
-    log_info "🙈 【install vim develop env!】"
-    
+    log_info "install vim develop env!"
+ 
+    get_os
+
+    prepare_packages
+
     check_user
 
     check_vim_version
-
-    get_os
-
-    init_packages
 
     install_packages
 
 #    copy_config_to_user_dir
 
-    log_info "🙈 【install develop env success! ( open vim run :PlugInstall )】" 
+    log_info "install develop env success! ( open vim run :PlugInstall ), if you have github.com error, maybe you can edit ~/.vim/autoload/plug.vim , change github.com with hub.fastgit.org" 
 }
 
 main
