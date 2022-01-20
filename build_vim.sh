@@ -20,6 +20,8 @@ function check_vim_version {
     fi
 }
 
+author=
+email=
 function check_user {
     if [ $EUID -ne 0 ]; then
         log_warning "Warning: This script use sudo or root to install tools!"
@@ -34,6 +36,9 @@ function check_user {
             ;;
         esac
     fi
+
+    read -p "🙈 【author: 】" author
+    read -p "🙈 【email:  】" email
 }
 
 function check_result() {
@@ -115,7 +120,7 @@ function prepare_packages {
 
 function install_packages {
     if [[ ${#packages[@]} -ne ${#exebin[@]} ]]; then
-        log_error "packages number is not equal with exebin"
+        log_error "packages number is not equal to exebin"
         exit 1
     fi
 
@@ -135,27 +140,28 @@ function copy_config_to_user_dir {
     pushd ${build_dir}
     git clone https://hub.fastgit.org/junegunn/vim-plug.git
     git clone https://hub.fastgit.org/PengMengJia/vim.git
-    popd
     
     if [ -e "$HOME/.vim/autoload/plug.vim" ]; then
         log_info "plug.vim 已存在"
     else
         mkdir -p ~/.vim/autoload
-        cp ${build_dir}/vim-plug/plug.vim ~/.vim/autoload/
+        cp vim-plug/plug.vim ~/.vim/autoload/
     fi
     
     if [ -e "$HOME/.vimrc" ]; then
         log_info ".vimrc 已存在"
     else
-        cp ${build_dir}/vim/.vimrc ~/
+        cp vim/.vimrc ~/
+        sed "s/god@sky.com/${email}/g" ~/.vimrc
+        sed "s/god/${author}/g" ~/.vimrc
     fi
     
     if [ -e "$HOME/.tmux.conf" ]; then
         log_info ".tmux.conf 已存在"
     else
-        cp ${build_dir}/vim/.tmux.conf ~/
+        cp vim/.tmux.conf ~/
     fi
-    
+    popd
     rm -rf ${build_dir}
 }
 

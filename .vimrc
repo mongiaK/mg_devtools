@@ -1,47 +1,87 @@
+let g:vimuser = "god"
+let g:useremail = "god@sky.com"
+
+
 call plug#begin('~/.vim/autoload')  " 表示插件安装在~/.vim/autoload 目录
 
+" 自动根据工程文件.svn .git等生成工程的tag索引
 Plug 'ludovicchabant/vim-gutentags'
-Plug 'majutsushi/tagbar'
-Plug 'flazz/vim-colorschemes'
-Plug 'scrooloose/nerdtree'
-Plug 'skywind3000/asyncrun.vim'
-Plug 'mileszs/ack.vim'
-Plug 'w0rp/ale'
-Plug 'fatih/vim-go'
-Plug 'vim-scripts/DoxygenToolkit.vim'
-Plug 'rhysd/vim-clang-format'
-" Plug 'vim-scripts/luainspect.vim'
-" Plug 'xolox/vim-misc'
-" Plug 'xolox/vim-lua-ftplugin'
-"Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'sebdah/vim-delve'
-Plug 'Yggdroot/LeaderF'
-Plug 'prabirshrestha/async.vim' " 补全插件
-Plug 'prabirshrestha/asyncomplete.vim' " 利用 async.vim 做的补全，相当于一个补全引擎。
-Plug 'prabirshrestha/vim-lsp' " Async Language Server Protocol plugin
-Plug 'mattn/vim-lsp-settings' " 配合vim-lsp使用，自动配置lsp 识别设置
-Plug 'prabirshrestha/asyncomplete-lsp.vim' " 将 lsp 中的内容交给 asyncomplete 做补全
-Plug 'jiangmiao/auto-pairs'
-" Plug 'hrsh7th/vim-vsnip'
-" Plug 'hrsh7th/vim-vsnip-integ'
-Plug 'plasticboy/vim-markdown'
-"Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
-" Plug 'mxw/vim-jsx'
-" Plug 'isRuslan/vim-es6'
-" Plug 'pangloss/vim-javascript'
-" html 基本框架
-" Plug 'mattn/emmet-vim'
-" Plug 'prettier/vim-prettier', {
-"  \ 'do': 'cnpm install',
-"  \ 'for': ['javascript', 'typescript', 'css', 'jsx', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 
+" 显示文件函数，变量
+Plug 'majutsushi/tagbar'
+
+" vim 配色库，很多种
+Plug 'flazz/vim-colorschemes'
+
+" 目录树
+Plug 'scrooloose/nerdtree'
+
+" 异步执行插件
+Plug 'skywind3000/asyncrun.vim'
+
+" 搜索工具
+Plug 'mileszs/ack.vim'
+
+" 语法检测工具
+Plug 'w0rp/ale'
+
+" vim go开发插件
+Plug 'fatih/vim-go'
+
+" 注释插件
+Plug 'vim-scripts/DoxygenToolkit.vim'
+
+" 格式化插件，依赖于clangformat
+Plug 'rhysd/vim-clang-format'
+
+" vim 调试go工程插件
+Plug 'sebdah/vim-delve'
+
+" 设置vim leader键
+" Plug 'Yggdroot/LeaderF'
+
+" 补全插件
+Plug 'prabirshrestha/async.vim'
+
+" 利用 async.vim 做的补全，相当于一个补全引擎。
+Plug 'prabirshrestha/asyncomplete.vim'
+
+" Async Language Server Protocol plugin
+Plug 'prabirshrestha/vim-lsp'
+
+" 配合vim-lsp使用，自动配置lsp 识别设置
+Plug 'mattn/vim-lsp-settings'
+
+" 将 lsp 中的内容交给 asyncomplete 做补全
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+
+" vim markdown 文件插件
+Plug 'plasticboy/vim-markdown'
+
+" markdown 文件预览
+Plug 'iamcco/markdown-preview.vim'
+
+" 自动括号，大括号等补全
+Plug 'tpope/vim-surround'
+
+" 自动匹配括号等
+Plug 'jiangmao/auto-pairs'
+
+" 状态栏
+Plug 'vim-airline/vim-airline'
 
 call plug#end()
 
-set t_Co=256
 syntax on
-" 设置文件读的格式
+set t_Co=256
+
+colorscheme molokai
+
+" 设置文件读的格式,终端格式等等
 set fencs=utf-8,gbk 
+set termencoding=utf-8
+set fileencoding=utf-8
+set encoding=utf-8
 " 关闭兼容模式
 set nocompatible    
 " 你输入查找内容的同时，vim就开始对你输入的内容进行匹配，并显示匹配的位置。打开这个选项，你可以即时看到查找的结果。
@@ -65,11 +105,9 @@ set cursorline
 " 查询显示高亮
 set hlsearch
 " 使vi可以用退格键删除
-set backspace=2
+set backspace=indent,eol,start
 " 是vim不闪屏
 set novisualbell
-" 设置tab等于4个空格
-set tabstop=4
 " 自动缩进时缩进为4格(sw)
 set shiftwidth=4
 " 启动折叠
@@ -77,23 +115,38 @@ set shiftwidth=4
 " 启用语法折叠
 " set foldmethod=syntax
 set nofoldenable
-set fdm=indent
 
 "  不换行
 set nowrap
 " #开启自动缩进   (ai)
 set autoindent
-" #编辑时可以将tab替换为空格(et)
+" #编辑时可以将tab替换为空格(et)，输入的不再是tab，而是空格
 set expandtab
-" set path=.,/usr/include,/usr/include/c++/4.4.7,/usr/include/c++/4.4.4
-set background=dark " 黑色背景
-set showcmd " 设置右下角显示完整命令
-set laststatus=2      " 总是显示状态栏
+" 设置tab等于4个空格
+set tabstop=4
+" 设置当前工程的工作目录，将系统的头文件加进来，方便查看系统函数
+set path=.,/usr/include,/usr/local/include
+" 设置右下角显示完整命令
+" set showcmd
+" 设置c语言自动缩进
 set cindent
-set mouse=nv " 设置鼠标可以在普通模式跟可视模式使用
-set tags=tags,../tags,../../tags,~/workspace/include/tags
-colorscheme molokai
-let mapleader=';'
+" 设置鼠标可以在普通模式跟可视模式使用
+set mouse=nv
+" 设置tag索引文件查询目录，当使用gentags时可以去掉该选项
+" set tags=tags,../tags,../../tags
+" 设置leader键
+let mapleader=','  
+
+func Airline()
+    let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
+    let g:airline_theme="dark"      " 设置主题
+    
+    " 开启tabline
+    let g:airline#extensions#tabline#enabled = 1      "tabline中当前buffer两端的分隔字符
+    let g:airline#extensions#tabline#left_sep = ' '   "tabline中未激活buffer两端的分隔字符
+    let g:airline#extensions#tabline#left_alt_sep = '|'      "tabline中buffer显示编号
+    let g:airline#extensions#tabline#buffer_nr_show = 1
+endfunc
 
 function VimGo()
     let g:go_template_autocreate = 0
@@ -147,7 +200,7 @@ endfunction
 call Tagbar()
 
 function Ale()
-    let g:ale_sign_column_always = 1  " 保持侧边栏可见
+    let g:ale_sign_column_always = 0  " 侧边栏不可见，只有错误的时候才显示
     let g:ale_set_highlights = 0
     "自定义error和warning图标
     let g:ale_sign_error = '✗'
@@ -160,12 +213,12 @@ function Ale()
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
     " ------------------  ale cpp ---------------------------
-    " let g:ale_cpp_clang_options = '-std=c++11 -Wall'
-    " let g:ale_cpp_gcc_options = '-std=c++11 -Wall'
+    let g:ale_cpp_clang_options = '-std=c++11 -Wall'
+    let g:ale_cpp_gcc_options = '-std=c++11 -Wall'
 
     " ------------------  ale c   --------------------------
     let b:ale_c_parse_makefile = 1
-    " let g:ale_c_parse_compile_commands = 0
+    let g:ale_c_parse_compile_commands = 0
     "
 
     " 不开启文件变了就立刻检查
@@ -209,18 +262,18 @@ func Comment(start_line, label)
 
     call setline(a:start_line + 1, a:label."  ")
     call setline(a:start_line + 2, a:label."  文件名称：".expand("%:t"))
-    call setline(a:start_line + 3, a:label."  创 建 者: mongia")
+    call setline(a:start_line + 3, a:label."  创 建 者: ".g:vimuser)
     call setline(a:start_line + 4, a:label."  创建日期：".strftime("%Y年%m月%d日"))
-"    call setline(a:start_line + 5, a:label."  邮    箱：mr_pengmj@outlook.com")
-    call setline(a:start_line + 5, a:label."  ")
+    call setline(a:start_line + 5, a:label."  邮    箱：".g:useremail)
+    call setline(a:start_line + 6, a:label."  ")
 
     if a:label == "*"
-        call setline(a:start_line + 6, "================================================================*/")
+        call setline(a:start_line + 7, "================================================================*/")
     elseif a:label == "#"
-        call setline(a:start_line + 6, "#=================================================================")
+        call setline(a:start_line + 7, "#=================================================================")
     endif
 
-    call setline(a:start_line + 7, "")
+    call setline(a:start_line + 8, "")
 endfunc
 
 " 定义函数SetTitle，自动插入文件头 
@@ -282,7 +335,7 @@ function Doxygen()
     let g:DoxygenToolkit_versionTag           = "version "
     let g:DoxygenToolkit_blockTag             = "name "
     let g:DoxygenToolkit_classTag             = "class "
-    let g:DoxygenToolkit_authorName           = "mongia"
+    let g:DoxygenToolkit_authorName           = g:vimuser
     let g:doxygen_enhanced_color              = 1
     let g:DoxygenToolkit_blockHeader          = "/****************************************************************************"
     let g:DoxygenToolkit_blockFooter          = "****************************************************************************/"
@@ -370,7 +423,6 @@ nmap <S-q> :q!<CR>
 nmap <silent> <F5> :AsyncRun -cwd=<root> make -j8 <CR>
 " 设置 F6 打开/关闭 Quickfix 窗口
 nmap <F6> :call asyncrun#quickfix_toggle(8)<CR>
-
 " ale快捷键
 nmap <leader>p <Plug>(ale_previous_wrap)
 nmap <leader>n <Plug>(ale_next_wrap)
@@ -385,4 +437,5 @@ nmap <leader>t :Tagbar<CR>
 nmap <leader>c :ccl<CR>
 nmap <leader>o :copen<CR>
 nmap <F7> :DlvAddBreakpoint<CR>
-nmap <F8> :DlvDebug<CR>
+nmap <F8> :DlvRemoveBreakpoint<CR>
+nmap <F9> :DlvDebug<CR>

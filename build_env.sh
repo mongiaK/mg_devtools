@@ -13,6 +13,13 @@ set -e
 
 source ./log.sh
 
+method=$1
+
+if [ $# != 1 ]; then
+    log_error "only one param!"
+    exit 1
+fi
+
 set_git_env()
 {
     if ! command -v git >/dev/null 2>&1 ; then
@@ -48,7 +55,7 @@ set_go_env()
 
 }
 
-set_node_cnpm()
+set_cnpm_env()
 {
     if command -v npm >/dev/null 2>&1 ; then
         if ! command -v cnpm >/dev/null 2>&1 ; then
@@ -57,9 +64,20 @@ set_node_cnpm()
     fi
 }
 
-shell_rc=""
-get_shell_file()
+set_npm_env() {
+    npm config set registry https://registry.npm.taobao.org --global
+    npm config set disturl https://npm.taobao.org/dist --global
+}
+
+set_yarn_env()
 {
+    yarn config set registry https://registry.npm.taobao.org --global
+    yarn config set disturl https://npm.taobao.org/dist --global
+}
+
+set_shell_env()
+{
+    shell_rc=
     shell=${SHELL##*/}
     case ${shell} in
         zsh)
@@ -69,14 +87,11 @@ get_shell_file()
             shell_rc=${HOME}/.bashrc
             ;;
         *)
-            log_warning "unsurport your shell, sorry!"
+            log_warning "unsurport your shell ${shell_rc}, sorry!"
+            return
             ;;
     esac
-    log_info "your shell rc is ${shell_rc}"
-}
 
-set_shell_rc_config()
-{
     if grep 'mongia' ${shell_rc} >/dev/null 2>&1; then 
         return
     fi
@@ -93,24 +108,43 @@ alias tmux='tmux -2'
 alias ls='ls --color=auto'
 alias vi='vim'
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+# end 
 EOF
 }
 
 main()
 {
-    log_info "build develop env. git, go, zsh ...!"
+    log_info "build ${method} dev env"
 
-    set_go_env 
+    case $method in
+        go)
+            set_go_env
+            ;;
+        git)
+            set_git_env
+            ;;
+        cnpm)
+            set_cnpm_env
+            ;;
+        npm)
+            set_npm_env
+            ;;
+        yarn)
+            set_yarn_env
+            ;;
+        zsh)
+            set_zsh_env
+            ;;
+        bash)
+            set_bash_env
+            ;;
+        *)
+            log_warning "unsupport your input"
+            exit 1
+            ;;
+    esac
 
-    set_git_env
-
-    set_node_cnpm
-
-    get_shell_file
-
-    set_shell_rc_config
-
-    log_info "install develop env success!" 
+    log_info "build env success!" 
 }
 
 main 
