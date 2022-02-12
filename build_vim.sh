@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -e -x
 
 source ./log.sh
 
@@ -128,8 +128,8 @@ function install_packages {
          if command -v ${exebin[$i]} >/dev/null 2>&1; then
              log_success "${exebin[$i]} 已安装"
          else
-             sudo $tools install ${condition} ${packages[$i]}
-             check_result "${$exebin[$i]}"
+             sudo $pkgtools install ${condition} ${packages[$i]}
+             check_result "${exebin[$i]}"
          fi
     done
 }
@@ -138,8 +138,8 @@ function copy_config_to_user_dir {
     build_dir=/tmp/vimenv
     mkdir -p ${build_dir}
     pushd ${build_dir}
-    git clone https://hub.fastgit.org/junegunn/vim-plug.git
-    git clone https://hub.fastgit.org/PengMengJia/vim.git
+    git clone https://github.com/junegunn/vim-plug.git
+    git clone https://github.com/PengMengJia/vim.git
     
     if [ -e "$HOME/.vim/autoload/plug.vim" ]; then
         log_info "plug.vim 已存在"
@@ -152,8 +152,8 @@ function copy_config_to_user_dir {
         log_info ".vimrc 已存在"
     else
         cp vim/.vimrc ~/
-        sed "s/god@sky.com/${email}/g" ~/.vimrc
-        sed "s/god/${author}/g" ~/.vimrc
+        sed -i "s/god@sky.com/${email}/g" ~/.vimrc
+        sed -i "s/god/${author}/g" ~/.vimrc
     fi
     
     if [ -e "$HOME/.tmux.conf" ]; then
@@ -178,7 +178,7 @@ function main {
 
     install_packages
 
-#    copy_config_to_user_dir
+    copy_config_to_user_dir
 
     log_info "install develop env success! ( open vim run :PlugInstall ), if you have github.com error, maybe you can edit ~/.vim/autoload/plug.vim , change github.com with hub.fastgit.org" 
 }
