@@ -65,7 +65,7 @@ Plug 'iamcco/markdown-preview.vim'
 Plug 'tpope/vim-surround'
 
 " 自动匹配括号等
-Plug 'jiangmao/auto-pairs'
+Plug 'jiangmiao/auto-pairs'
 
 " 状态栏
 Plug 'vim-airline/vim-airline'
