@@ -9,7 +9,7 @@
 #  
 #=================================================================
 
-set -e
+set -e -x
 
 source ./log.sh
 
@@ -92,7 +92,7 @@ set_shell_env()
             ;;
     esac
 
-    if grep 'mongia' ${shell_rc} >/dev/null 2>&1; then 
+    if grep 'mongia usage' ${shell_rc} >/dev/null 2>&1; then 
         return
     fi
 cat << EOF >> ${shell_rc}
@@ -132,11 +132,8 @@ main()
         yarn)
             set_yarn_env
             ;;
-        zsh)
-            set_zsh_env
-            ;;
-        bash)
-            set_bash_env
+        shell)
+            set_shell_env
             ;;
         *)
             log_warning "unsupport your input"
