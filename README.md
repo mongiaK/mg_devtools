@@ -1,4 +1,4 @@
-# c++ 服务器快速构建开发环境
+#c++ 服务器快速构建开发环境
 
 ## 文件功能
 
@@ -28,3 +28,31 @@
 | 地址 | 描述 |
 | ---- | ---- |
 | https://websites.ipaddress.com/ | 查询域名对应ip地址 | 
+
+## windows terminal 配色
+```
+{
+            "background": "#1C2024",
+            "black": "#000000",
+            "blue": "#2980B9",
+            "brightBlack": "#52677C",
+            "brightBlue": "#3498DB",
+            "brightCyan": "#1ABC9C",
+            "brightGreen": "#2ECC71",
+            "brightPurple": "#9B59B6",
+            "brightRed": "#E67E22",
+            "brightWhite": "#ECF0F1",
+            "brightYellow": "#F1C40F",
+            "cursorColor": "#FFFFFF",
+            "cyan": "#16A085",
+            "foreground": "#ECF0F1",
+            "green": "#27AE60",
+            "name": "Flat UI Palette v1 Modified",
+            "purple": "#8E44AD",
+            "red": "#E74C3C",
+            "selectionBackground": "#FFFFFF",
+            "white": "#FFFFFF",
+            "yellow": "#F1C40F"
+},
+
+```
