@@ -138,8 +138,8 @@ function copy_config_to_user_dir {
     build_dir=/tmp/vimenv
     mkdir -p ${build_dir}
     pushd ${build_dir}
-    git clone https://github.com/junegunn/vim-plug.git
-    git clone https://github.com/PengMengJia/vim.git
+    git clone https://hub.fastgit.xyz/junegunn/vim-plug.git
+    git clone https://hub.fastgit.xyz/PengMengJia/mg_devtools.git
     
     if [ -e "$HOME/.vim/autoload/plug.vim" ]; then
         log_info "plug.vim 已存在"
@@ -151,15 +151,15 @@ function copy_config_to_user_dir {
     if [ -e "$HOME/.vimrc" ]; then
         log_info ".vimrc 已存在"
     else
-        cp vim/.vimrc ~/
-        sed -i "s/god@sky.com/${email}/g" ~/.vimrc
-        sed -i "s/god/${author}/g" ~/.vimrc
+        cp mg_devtools/vim/.vimrc ~/
+        sed -i "" "s/god@sky.com/${email}/g" ~/.vimrc
+        sed -i "" "s/god/${author}/g" ~/.vimrc
     fi
     
     if [ -e "$HOME/.tmux.conf" ]; then
         log_info ".tmux.conf 已存在"
     else
-        cp vim/.tmux.conf ~/
+        cp mg_devtools/tmux/.tmux.conf ~/
     fi
     popd
     rm -rf ${build_dir}

@@ -351,7 +351,7 @@ call Doxygen()
 " autocmd! 删除自动命令
 " autocmd 监听指定命令做相应操作
 function LspSetting()
-    let g:lsp_settings_servers_dir='~/.local/share/vim-lsp-settings/servers'
+    let g:lsp_settings_servers_dir='~/.vim/vim-lsp-settings/servers'
     let g:asyncomplete_auto_completeopt = 0
     let g:lsp_signature_help_enabled = 0
     set completeopt=menuone,noinsert,noselect " preview
