@@ -1,6 +1,6 @@
 let g:vimuser = "god"
 let g:useremail = "god@sky.com"
-
+let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project'] 
 
 call plug#begin('~/.vim/autoload')  " 表示插件安装在~/.vim/autoload 目录
 
@@ -37,8 +37,8 @@ Plug 'rhysd/vim-clang-format'
 " vim 调试go工程插件
 Plug 'sebdah/vim-delve'
 
-" 设置vim leader键
-" Plug 'Yggdroot/LeaderF'
+" 替代tagbar
+Plug 'Yggdroot/LeaderF'
 
 " 补全插件
 Plug 'prabirshrestha/async.vim'
@@ -69,6 +69,9 @@ Plug 'jiangmiao/auto-pairs'
 
 " 状态栏
 Plug 'vim-airline/vim-airline'
+
+" 显示函数参数
+Plug 'Shougo/echodoc.vim'
 
 call plug#end()
 
@@ -157,7 +160,7 @@ call VimGo()
 function GutenTags()
     " --------------- gutentags 配置------------------
     " gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
-    let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+    let g:gutentags_project_root = g:urootmarks
 
     " 所生成的数据文件的名称
     let g:gutentags_ctags_tagfile = '.tags'
@@ -196,6 +199,8 @@ function Tagbar()
     let g:tagbar_left = 0
     " tagbar 设置
     let g:tagbar_width = 30
+    
+    nmap <leader>t :Tagbar<CR>
 endfunction 
 call Tagbar()
 
@@ -253,7 +258,7 @@ endfunction
 call BuildComment()
 
 " 加入注释
-func Comment(start_line, label)
+function Comment(start_line, label)
     if a:label == "*"
         call setline(a:start_line, "/*================================================================")
     elseif a:label == "#"
@@ -274,10 +279,10 @@ func Comment(start_line, label)
     endif
 
     call setline(a:start_line + 8, "")
-endfunc
+endfunction
 
 " 定义函数SetTitle，自动插入文件头 
-func SetTitle()
+function SetTitle()
 	if &filetype == 'make'
 		call Comment(1, "#")
 	elseif &filetype == 'sh' 
@@ -318,7 +323,7 @@ func SetTitle()
             call setline(10, "#include \"".expand("%:t:r").".h\"")
         endif
     endif
-endfunc
+endfunction
 
 function Doxygen()
     let g:DoxygenToolkit_briefTag_funcName = "yes"
@@ -374,7 +379,7 @@ call Ack()
 
 function AsyncRun()
     " 如果递归到根目录还没找到，那么文件所在目录就被当作项目目录。
-    let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml'] 
+    let g:asyncrun_rootmarks = g:urootmarks 
     " 自动打开 quickfix window ，高度为 8
     let g:asyncrun_open = 8
 endfunction
@@ -384,6 +389,40 @@ function VimDelve()
     let g:delve_new_command = 'new'
 endfunction 
 call VimDelve()
+
+function EchoDoc()
+    " Or, you could use vim's popup window feature.
+    let g:echodoc#enable_at_startup = 1
+    let g:echodoc#type = 'popup'
+    " To use a custom highlight for the popup window,
+    " change Pmenu to your highlight group
+    highlight link EchoDocPopup Pmenu
+endfunction
+call EchoDoc()
+
+function LeaderF()
+    let g:Lf_ShortcutF = '<leader>f'
+    let g:Lf_WorkingDirectoryMode = 'AF'
+    let g:Lf_RootMarkers = g:urootmarks
+    let g:Lf_DefaultExternalTool = 'ag'
+    let g:Lf_PreviewInPopup = 1
+    let g:Lf_WindowHeight = 0.30
+    let g:Lf_CacheDirectory = "~/.cache/vim/.LFCache"
+    let g:Lf_StlColorscheme = 'powerline'
+    let g:Lf_PreviewResult = {
+        \ 'File': 0,
+        \ 'Buffer': 0,
+        \ 'Mru': 0,
+        \ 'Tag': 0,
+        \ 'BufTag': 1,
+        \ 'Function': 1,
+        \ 'Line': 1,
+        \ 'Colorscheme': 0,
+        \ 'Rg': 0,
+        \ 'Gtags': 0
+        \}
+endfunction
+call LeaderF()
 
 "Command命令	常规模式	可视化模式	运算符模式	插入模式	命令行模式
 ":map	            √	        √	        √	 	 
@@ -404,38 +443,48 @@ call VimDelve()
 " %:e 扩展名
 " map 可以递归映射，noremap 非递归映射
 
-nmap <C-o> :NERDTree<CR>
-nmap <C-i> :NERDTreeClose<CR>
-nmap <S-f> :ClangFormat <CR>
-nmap <C-f> :Ack <cword><CR>
+function NerdTreeShortKey()
+    nmap <C-o> :NERDTree<CR>
+    nmap <C-i> :NERDTreeClose<CR>
+endfunction
+call NerdTreeShortKey()
 
-" 快捷键 配置 <C-R>插入寄存器数据，=是vim的特殊寄存器
-nmap <C-h> :vsp <C-R>=expand('%:p:r').'.h'<CR><CR>
-nmap <C-p> :vsp <C-R>=expand('%:p:r').'.cpp'<CR><CR>
-nmap <S-c> :vsp <C-R>=expand('%:p:r').'.c'<CR><CR>
-nmap <S-p> :vsp <C-R>=expand('%:p:r').'.cc'<CR><CR>
+function BasicShortKey()
+    nmap <S-f> :ClangFormat <CR>
+    nmap <S-a> :Ack <cword><CR>
+    nmap <S-q> :q!<CR>
+    nmap <F6> :call asyncrun#quickfix_toggle(8)<CR>
+endfunction
+call BasicShortKey()
 
-" 查看二进制文件
-nmap <S-b> :!xxd <CR>
-nmap <S-q> :q!<CR>
+function CShortKey()
+    " 快捷键 配置 <C-R>插入寄存器数据，=是vim的特殊寄存器
+    nmap <C-h> :vsp <C-R>=expand('%:p:r').'.h'<CR><CR>
+    nmap <C-p> :vsp <C-R>=expand('%:p:r').'.cpp'<CR><CR>
+    nmap <C-c> :vsp <C-R>=expand('%:p:r').'.c'<CR><CR>
+    
+    " 设置 F5 从工程根目录编译整个工程
+    nmap <silent> <F5> :AsyncRun -cwd=<root> make -j8 <CR>
+endfunction
+call CShortKey()
 
-" 设置 F5 从工程根目录编译整个工程
-nmap <silent> <F5> :AsyncRun -cwd=<root> make -j8 <CR>
-" 设置 F6 打开/关闭 Quickfix 窗口
-nmap <F6> :call asyncrun#quickfix_toggle(8)<CR>
-" ale快捷键
-nmap <leader>p <Plug>(ale_previous_wrap)
-nmap <leader>n <Plug>(ale_next_wrap)
-nmap <leader>e :ALEDetail<CR>
-nmap <leader>l :ALEInfo<CR>
+function AleShortKey()
+    nmap <leader>p <Plug>(ale_previous_wrap)
+    nmap <leader>n <Plug>(ale_next_wrap)
+    nmap <leader>e :ALEDetail<CR>
+    nmap <leader>l :ALEInfo<CR>
+endfunction
+call AleShortKey()
 
-nmap <leader>f :LeaderfFunction<CR>
-nmap <leader>b :GoBuild<CR>
-nmap <leader>r :GoRun<CR>
-nmap <leader>i :GoImports<CR>
-nmap <leader>t :Tagbar<CR>
-nmap <leader>c :ccl<CR>
-nmap <leader>o :copen<CR>
-nmap <F7> :DlvAddBreakpoint<CR>
-nmap <F8> :DlvRemoveBreakpoint<CR>
-nmap <F9> :DlvDebug<CR>
+function GoShortKey()
+    nmap <leader>b :GoBuild<CR>
+    nmap <leader>r :GoRun<CR>
+    nmap <leader>i :GoImports<CR>
+    
+    nmap <leader>F3 :DlvAddBreakpoint<CR>
+    nmap <leader>F4 :DlvRemoveBreakpoint<CR>
+    nmap <leader>F5 :DlvDebug<CR>
+endfunction
+call GoShortKey()
+
+autocmd! bufwritepost $HOME/.vimrc source %
