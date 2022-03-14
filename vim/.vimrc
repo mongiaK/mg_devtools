@@ -165,6 +165,15 @@ function GutenTags()
     " 所生成的数据文件的名称
     let g:gutentags_ctags_tagfile = '.tags'
 
+    " 同时开启 ctags 和 gtags 支持
+    let g:gutentags_modules = []
+    if executable('ctags')
+	    let g:gutentags_modules += ['ctags']
+    endif
+       if executable('gtags-cscope') && executable('gtags')
+	    let g:gutentags_modules += ['gtags_cscope']
+    endif
+
     " 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
     let s:vim_tags = expand('~/.cache/tags')
     let g:gutentags_cache_dir = s:vim_tags
@@ -183,14 +192,15 @@ call GutenTags()
 
 function Nerdtree()
     "  右侧显示文件树
-    let NERDTreeWinPos=0
-    let NERDTreeHighlightCursorline = 1
+    let g:NERDTreeWinPos=0
+    let g:NERDTreeHighlightCursorline = 1
     autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
     let g:NERDTreeDirArrowExpandable = '▸'
     let g:NERDTreeDirArrowCollapsible = '▾'
-    let NERDTreeMinimalUI = 1
-    let NERDTreeDirArrows = 1
-    let NERDTreeShowBookmarks=1
+    let g:NERDTreeMinimalUI = 1
+    let g:NERDTreeDirArrows = 1
+    let g:NERDTreeShowBookmarks=1
+    let g:NERDTreeShowHidden=1
 endfunction 
 call Nerdtree()
 
@@ -202,7 +212,7 @@ function Tagbar()
     
     nmap <leader>t :Tagbar<CR>
 endfunction 
-call Tagbar()
+" call Tagbar()
 
 function Ale()
     let g:ale_sign_column_always = 0  " 侧边栏不可见，只有错误的时候才显示
@@ -407,7 +417,6 @@ function LeaderF()
     let g:Lf_DefaultExternalTool = 'ag'
     let g:Lf_PreviewInPopup = 1
     let g:Lf_WindowHeight = 0.30
-    let g:Lf_CacheDirectory = "~/.cache/vim/.LFCache"
     let g:Lf_StlColorscheme = 'powerline'
     let g:Lf_PreviewResult = {
         \ 'File': 0,
@@ -421,6 +430,24 @@ function LeaderF()
         \ 'Rg': 0,
         \ 'Gtags': 0
         \}
+    let g:Lf_WildIgnore = {
+            \ 'dir': ['.svn','.git','.hg'],
+            \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
+            \}
+    let g:Lf_Ctags = "gtags"
+
+    if has('nvim')
+        let s:cachedir = expand(stdpath('cache'))
+    else
+        "vim will share same folder with nvim
+        if has('win32')
+            let s:cachedir = expand('~/AppData/Local/Temp/cache/vim')
+        else
+            let s:cachedir = expand('~/.cache/vim')
+        endif
+    endif
+
+    let g:Lf_CacheDirectory = s:cachedir
 endfunction
 call LeaderF()
 
@@ -443,9 +470,14 @@ call LeaderF()
 " %:e 扩展名
 " map 可以递归映射，noremap 非递归映射
 
+function LeaderfShortKey()
+    noremap <C-l>f :LeaderfFunction<CR>
+endfunction
+call LeaderfShortKey()
+
 function NerdTreeShortKey()
-    nmap <C-o> :NERDTree<CR>
-    nmap <C-i> :NERDTreeClose<CR>
+    nmap <C-n>o :NERDTree<CR>
+    nmap <C-n>c :NERDTreeClose<CR>
 endfunction
 call NerdTreeShortKey()
 
@@ -469,21 +501,21 @@ endfunction
 call CShortKey()
 
 function AleShortKey()
-    nmap <leader>p <Plug>(ale_previous_wrap)
-    nmap <leader>n <Plug>(ale_next_wrap)
-    nmap <leader>e :ALEDetail<CR>
-    nmap <leader>l :ALEInfo<CR>
+    nmap <C-a>p <Plug>(ale_previous_wrap)
+    nmap <C-a>n <Plug>(ale_next_wrap)
+    nmap <C-a>d :ALEDetail<CR>
+    nmap <C-a>i :ALEInfo<CR>
 endfunction
 call AleShortKey()
 
 function GoShortKey()
-    nmap <leader>b :GoBuild<CR>
-    nmap <leader>r :GoRun<CR>
-    nmap <leader>i :GoImports<CR>
+    nmap <C-g>b :GoBuild<CR>
+    nmap <C-g>r :GoRun<CR>
+    nmap <C-g>i :GoImports<CR>
     
-    nmap <leader>F3 :DlvAddBreakpoint<CR>
-    nmap <leader>F4 :DlvRemoveBreakpoint<CR>
-    nmap <leader>F5 :DlvDebug<CR>
+    nmap <C-g>F3 :DlvAddBreakpoint<CR>
+    nmap <C-g>F4 :DlvRemoveBreakpoint<CR>
+    nmap <C-c>F5 :DlvDebug<CR>
 endfunction
 call GoShortKey()
 

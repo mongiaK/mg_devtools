@@ -106,7 +106,6 @@ export GIT_EDITOR=vim
 alias grep='grep --color'
 alias tmux='tmux -2'
 alias ls='ls --color=auto'
-alias vi='vim'
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 # end 
 EOF
