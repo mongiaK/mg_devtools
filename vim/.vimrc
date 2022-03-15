@@ -2,6 +2,8 @@ let g:vimuser = "god"
 let g:useremail = "god@sky.com"
 let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project'] 
 
+" 设置插件安装的git地址，github太慢了。
+let g:plug_url_format = 'https://git::@hub.fastgit.xyz/%s.git'
 call plug#begin('~/.vim/autoload')  " 表示插件安装在~/.vim/autoload 目录
 
 " 自动根据工程文件.svn .git等生成工程的tag索引

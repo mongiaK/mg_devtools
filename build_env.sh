@@ -20,6 +20,14 @@ if [ $# != 1 ]; then
     exit 1
 fi
 
+set_zsh_env()
+{
+    if [ -e "$HOME/.oh-my-zsh" ] ; then
+        return
+    fi
+    sh -c "$(wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh -O -)"]
+}
+
 set_git_env()
 {
     if ! command -v git >/dev/null 2>&1 ; then
@@ -133,6 +141,9 @@ main()
             ;;
         shell)
             set_shell_env
+            ;;
+        oh-my-zsh)
+            set_zsh_env
             ;;
         *)
             log_warning "unsupport your input"
