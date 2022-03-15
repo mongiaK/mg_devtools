@@ -476,8 +476,8 @@ endfunction
 call LeaderfShortKey()
 
 function NerdTreeShortKey()
-    nmap <C-o> :NERDTree<CR>
-    nmap <C-i> :NERDTreeClose<CR>
+    nmap <C-n>o :NERDTree<CR>
+    nmap <C-n>c :NERDTreeClose<CR>
 endfunction
 call NerdTreeShortKey()
 
