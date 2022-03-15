@@ -149,7 +149,10 @@ set cindent
 " 设置鼠标可以在普通模式跟可视模式使用
 set mouse=nv
 " 设置tag索引文件查询目录，当使用gentags时可以去掉该选项
-" set tags=tags,../tags,../../tags
+" set tags=tags,../tags,../../tagsset 
+" 设置path路径，方便查询系统函数及库函数
+set path=.,/usr/include,/usr/include/c++/4.4.7,/usr/include/c++/4.4.4
+
 " 设置leader键
 let mapleader=','  
 
