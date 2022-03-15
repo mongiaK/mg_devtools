@@ -73,6 +73,12 @@ Plug 'vim-airline/vim-airline'
 " 显示函数参数
 Plug 'Shougo/echodoc.vim'
 
+" git 修改
+Plug 'tpope/vim-fugitive'
+
+" 
+Plug 'kien/ctrlp.vim'
+
 call plug#end()
 
 syntax on
@@ -118,7 +124,12 @@ set shiftwidth=4
 " 启用语法折叠
 " set foldmethod=syntax
 set nofoldenable
-
+" 语言设置
+set langmenu=zn_CN.UTF-8
+set helplang=cn
+" 高亮显示括号
+set showmatch
+set matchtime=5
 "  不换行
 set nowrap
 " #开启自动缩进   (ai)
@@ -177,6 +188,9 @@ function GutenTags()
     " 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
     let s:vim_tags = expand('~/.cache/tags')
     let g:gutentags_cache_dir = s:vim_tags
+    
+    " 调试开关
+    " let g:gutentags_trace = 1
 
     " 配置 ctags 的参数
     let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
@@ -410,31 +424,12 @@ function EchoDoc()
 endfunction
 call EchoDoc()
 
-function LeaderF()
+function MLeaderF()
     let g:Lf_ShortcutF = '<leader>f'
-    let g:Lf_WorkingDirectoryMode = 'AF'
     let g:Lf_RootMarkers = g:urootmarks
     let g:Lf_DefaultExternalTool = 'ag'
-    let g:Lf_PreviewInPopup = 1
     let g:Lf_WindowHeight = 0.30
-    let g:Lf_StlColorscheme = 'powerline'
-    let g:Lf_PreviewResult = {
-        \ 'File': 0,
-        \ 'Buffer': 0,
-        \ 'Mru': 0,
-        \ 'Tag': 0,
-        \ 'BufTag': 1,
-        \ 'Function': 1,
-        \ 'Line': 1,
-        \ 'Colorscheme': 0,
-        \ 'Rg': 0,
-        \ 'Gtags': 0
-        \}
-    let g:Lf_WildIgnore = {
-            \ 'dir': ['.svn','.git','.hg'],
-            \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
-            \}
-    let g:Lf_Ctags = "gtags"
+    let g:Lf_ctags = 'gtags'
 
     if has('nvim')
         let s:cachedir = expand(stdpath('cache'))
@@ -449,7 +444,7 @@ function LeaderF()
 
     let g:Lf_CacheDirectory = s:cachedir
 endfunction
-call LeaderF()
+call MLeaderF()
 
 "Command命令	常规模式	可视化模式	运算符模式	插入模式	命令行模式
 ":map	            √	        √	        √	 	 
@@ -471,13 +466,13 @@ call LeaderF()
 " map 可以递归映射，noremap 非递归映射
 
 function LeaderfShortKey()
-    noremap <C-l>f :LeaderfFunction<CR>
+    noremap <leader-l>f :LeaderfFunction<CR>
 endfunction
 call LeaderfShortKey()
 
 function NerdTreeShortKey()
-    nmap <C-n>o :NERDTree<CR>
-    nmap <C-n>c :NERDTreeClose<CR>
+    nmap <C-o> :NERDTree<CR>
+    nmap <C-i> :NERDTreeClose<CR>
 endfunction
 call NerdTreeShortKey()
 
