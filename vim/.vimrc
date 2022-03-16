@@ -151,7 +151,7 @@ set mouse=nv
 " 设置tag索引文件查询目录，当使用gentags时可以去掉该选项
 " set tags=tags,../tags,../../tagsset 
 " 设置path路径，方便查询系统函数及库函数
-set path=.,/usr/include,/usr/include/c++/4.4.7,/usr/include/c++/4.4.4
+set path=.,/usr/include,/usr/local/include,/usr/include/c++/4.4.7,/usr/include/c++/4.4.4
 
 " 设置leader键
 let mapleader=','  
@@ -176,7 +176,7 @@ call VimGo()
 function GutenTags()
     " --------------- gutentags 配置------------------
     " gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
-    let g:gutentags_project_root = g:urootmarks
+    let g:gutentags_project_root = g:urootmarks 
 
     " 所生成的数据文件的名称
     let g:gutentags_ctags_tagfile = '.tags'
@@ -386,17 +386,48 @@ call Doxygen()
 " autocmd 监听指定命令做相应操作
 function LspSetting()
     let g:lsp_settings_servers_dir='~/.vim/vim-lsp-settings/servers'
-    let g:asyncomplete_auto_completeopt = 0
-    let g:lsp_signature_help_enabled = 0
+    let g:asyncomplete_auto_completeopt = 1
+    
+    " noselect 触发补全不选第一个
+    " noinsert
+    " menuone
+    " preview 触发补全选择第一个
     set completeopt=menuone,noinsert,noselect " preview
-"    autocmd CursorMovedI * if pumvisible() == 0 | pclose | endif 
-"    autocmd InsertLeave * if pumvisible() == 0 | pclose | endif
-"    autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
-"    autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif "pumvisible 0: 开启 判断窗口时候打开，
+    
+    " pumvisible, popup menu 窗口存在返回非0，否则返回0
     inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 "    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
     " inoremap <expr> <CR>    pumvisible() ? "\<C-y>" : "\<CR>"
+    " 回撤按下，如果popup窗口存在则关闭，否则就正常执行回撤
     inoremap <expr> <CR>    pumvisible() ? asyncomplete#close_popup() : "\<CR>"
+
+    " 注册python的lsp server到lsp setting，补全使用
+    if executable('pyls')
+        " pip install python-language-server
+        au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+    endif
+
+    " 注册bash的lsp server
+    if executable('bash-language-server')
+        au User lsp_setup call lsp#register_server({
+            \ 'name': 'bash-language-server',
+            \ 'cmd': {server_info->[&shell, &shellcmdflag, 'bash-language-server start']},
+            \ 'whitelist': ['sh'],
+            \ })
+    endif
+
+    if executable('clangd')
+        au User lsp_setup call lsp#register_server({
+            \ 'name': 'clangd',
+            \ 'cmd': {server_info->['clangd']},
+            \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', '.h', '.hpp', '.cc'],
+            \ })
+    endif
+
 endfunction
 call LspSetting()
 
@@ -470,6 +501,13 @@ call MLeaderF()
 " %:e 扩展名
 " map 可以递归映射，noremap 非递归映射
 
+" 特殊参数
+" <buffer> : 映射只局限在当前缓冲区
+" <silent> : 执行按键绑定不再命令行显示
+" <special>: 用于定义特殊键怕有副作用的场合
+" <expr>   : 如果定义新映射的第一个参数是<expr>，那么参数会作为表达式来进行计算，结果使用实际使用的
+" <unique> : 检测新的键映射是否存在，存在则失败
+
 function LeaderfShortKey()
     noremap <leader-l>f :LeaderfFunction<CR>
 endfunction
@@ -495,7 +533,7 @@ function CShortKey()
     nmap <C-p> :vsp <C-R>=expand('%:p:r').'.cpp'<CR><CR>
     nmap <C-c> :vsp <C-R>=expand('%:p:r').'.c'<CR><CR>
     
-    " 设置 F5 从工程根目录编译整个工程
+    " 设置 F5 从工程根目录编译整个工程 
     nmap <silent> <F5> :AsyncRun -cwd=<root> make -j8 <CR>
 endfunction
 call CShortKey()
@@ -518,5 +556,12 @@ function GoShortKey()
     nmap <C-c>F5 :DlvDebug<CR>
 endfunction
 call GoShortKey()
+
+function SurroundShortKey()
+    nmap <C-s>d <Plug>Dsurround
+    nmap <C-s>c <Plug>Csurround
+    imap <C-s>g <Plug>Isurround
+endfunction
+call SurroundShortKey()
 
 autocmd! bufwritepost $HOME/.vimrc source %
