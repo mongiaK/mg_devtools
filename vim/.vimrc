@@ -20,6 +20,9 @@ call plug#begin($plugdir)  " 表示插件安装在~/.vim/autoload 目录
 " 自动根据工程文件.svn .git等生成工程的tag索引
 Plug 'ludovicchabant/vim-gutentags'
 
+" 显示快捷键
+Plug 'liuchengxu/vim-which-key'
+
 " 显示文件函数，变量
 Plug 'majutsushi/tagbar'
 
@@ -170,10 +173,14 @@ set mouse=nv
 " 设置path路径，方便查询系统函数及库函数
 set path=.,/usr/include,/usr/local/include,/usr/include/c++/4.4.7,/usr/include/c++/4.4.4
 
-" 设置leader键
-let mapleader=','  
+set timeoutlen=300
 
-func Airline()
+" 设置leader键
+let g:mapleader = "\<Space>"
+nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
+let g:which_key_map = {}
+
+function Airline()
     let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
     let g:airline_theme="dark"      " 设置主题
     
@@ -182,7 +189,7 @@ func Airline()
     let g:airline#extensions#tabline#left_sep = ' '   "tabline中未激活buffer两端的分隔字符
     let g:airline#extensions#tabline#left_alt_sep = '|'      "tabline中buffer显示编号
     let g:airline#extensions#tabline#buffer_nr_show = 1
-endfunc
+endfunction
 
 function VimGo()
     let g:go_template_autocreate = 0
@@ -525,14 +532,9 @@ call MLeaderF()
 " <expr>   : 如果定义新映射的第一个参数是<expr>，那么参数会作为表达式来进行计算，结果使用实际使用的
 " <unique> : 检测新的键映射是否存在，存在则失败
 
-function LeaderfShortKey()
-    noremap <leader-l>f :LeaderfFunction<CR>
-endfunction
-call LeaderfShortKey()
-
 function NerdTreeShortKey()
-    nmap <C-n>o :NERDTree<CR>
-    nmap <C-n>c :NERDTreeClose<CR>
+    nmap <leader>n :NERDTree<CR>
+    nmap <leader>c :NERDTreeClose<CR>
 endfunction
 call NerdTreeShortKey()
 
@@ -556,21 +558,22 @@ endfunction
 call CShortKey()
 
 function AleShortKey()
-    nmap <C-a>p <Plug>(ale_previous_wrap)
-    nmap <C-a>n <Plug>(ale_next_wrap)
-    nmap <C-a>d :ALEDetail<CR>
-    nmap <C-a>i :ALEInfo<CR>
+    nnoremap <leader>ap <Plug>(ale_previous_wrap)
+    nnoremap <leader>an <Plug>(ale_next_wrap)
+    nnoremap <leader>ad :ALEDetail<CR>
+    nnoremap <leader>ai :ALEInfo<CR>
+
 endfunction
 call AleShortKey()
 
 function GoShortKey()
-    nmap <C-g>b :GoBuild<CR>
-    nmap <C-g>r :GoRun<CR>
-    nmap <C-g>i :GoImports<CR>
+    nmap <leader>gb :GoBuild<CR>
+    nmap <leader>gR :GoRun<CR>
+    nmap <leader>gi :GoImports<CR>
     
-    nmap <C-g>F3 :DlvAddBreakpoint<CR>
-    nmap <C-g>F4 :DlvRemoveBreakpoint<CR>
-    nmap <C-c>F5 :DlvDebug<CR>
+    nmap <leader>ga :DlvAddBreakpoint<CR>
+    nmap <leader>gr :DlvRemoveBreakpoint<CR>
+    nmap <leader>gd :DlvDebug<CR>
 endfunction
 call GoShortKey()
 
@@ -585,3 +588,14 @@ function AutoCommand()
     autocmd! bufwritepost $HOME/.vimrc source %
 endfunction
 call AutoCommand()
+
+function WhichKey()
+    let g:which_key_map.a = {'name': 'ale', 'p': "ale previous wrap", 'n': 'ale next wrap', 'd': 'ale detail', 'i': 'ale info'}
+    let g:which_key_map.c = { 'name': "nerdtree close" }
+    let g:which_key_map.g = {'name': 'go debug', 'b': 'go build', 'R': 'go run', 'i': 'go imports', 'a': 'add break point', 'r': 'remove breakpoint', 'd': 'debug run' }
+    let g:which_key_map.n = { 'name': 'nerdtree open' }
+    call which_key#register('<Space>', "g:which_key_map")
+endfunction
+call WhichKey()
+
+
