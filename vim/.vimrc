@@ -2,9 +2,20 @@ let g:vimuser = "god"
 let g:useremail = "god@sky.com"
 let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project'] 
 
-" 设置插件安装的git地址，github太慢了。
-let g:plug_url_format = 'https://git::@hub.fastgit.xyz/%s.git'
-call plug#begin('~/.vim/autoload')  " 表示插件安装在~/.vim/autoload 目录
+function CheckPlugVim()
+    let $plugdir = expand("$HOME/.vim/autoload")
+    if empty(glob(expand("$plugdir/plug.vim")))
+        silent !curl -fLo $plugdir/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        autocmd VimEnter * PlugInstall --sync | source ~/.vimrc
+    endif
+    source $plugdir/plug.vim
+endfunction
+call CheckPlugVim()
+
+
+" 设置插件安装的git地址，github太慢了可以搜索Watt工具。
+let g:plug_url_format = 'https://git::@github.com/%s.git'
+call plug#begin($plugdir)  " 表示插件安装在~/.vim/autoload 目录
 
 " 自动根据工程文件.svn .git等生成工程的tag索引
 Plug 'ludovicchabant/vim-gutentags'
@@ -13,7 +24,8 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'majutsushi/tagbar'
 
 " vim 配色库，很多种
-Plug 'flazz/vim-colorschemes'
+" Plug 'flazz/vim-colorschemes'
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 
 " 目录树
 Plug 'scrooloose/nerdtree'
@@ -84,9 +96,14 @@ Plug 'kien/ctrlp.vim'
 call plug#end()
 
 syntax on
-set t_Co=256
+set t_Co=256 "设置终端为256色，但是不能满足一些gui的颜色"
 
-colorscheme molokai
+colorscheme catppuccin_mocha
+
+if has("termguicolors") "开启终端gui真彩色
+    " enable true color
+    set termguicolors
+endif
 
 " 设置文件读的格式,终端格式等等
 set fencs=utf-8,gbk 
@@ -564,4 +581,7 @@ function SurroundShortKey()
 endfunction
 call SurroundShortKey()
 
-autocmd! bufwritepost $HOME/.vimrc source %
+function AutoCommand()
+    autocmd! bufwritepost $HOME/.vimrc source %
+endfunction
+call AutoCommand()
