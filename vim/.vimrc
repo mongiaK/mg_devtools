@@ -28,6 +28,7 @@ Plug 'majutsushi/tagbar'
 
 " vim 配色库，很多种
 " Plug 'flazz/vim-colorschemes'
+Plug 'tomasr/molokai'
 Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 
 " 目录树
@@ -55,7 +56,7 @@ Plug 'rhysd/vim-clang-format'
 Plug 'sebdah/vim-delve'
 
 " 替代tagbar
-Plug 'Yggdroot/LeaderF'
+Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 
 " 补全插件
 Plug 'prabirshrestha/async.vim'
@@ -93,15 +94,15 @@ Plug 'Shougo/echodoc.vim'
 " git 修改
 Plug 'tpope/vim-fugitive'
 
-" 
-Plug 'kien/ctrlp.vim'
+" Plug 'kien/ctrlp.vim'
 
 call plug#end()
 
 syntax on
 set t_Co=256 "设置终端为256色，但是不能满足一些gui的颜色"
 
-colorscheme catppuccin_mocha
+colorscheme molokai
+" colorscheme catppuccin_mocha
 
 if has("termguicolors") "开启终端gui真彩色
     " enable true color
@@ -197,42 +198,6 @@ function VimGo()
 endfunction 
 call VimGo()
 
-function GutenTags()
-    " --------------- gutentags 配置------------------
-    " gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
-    let g:gutentags_project_root = g:urootmarks 
-
-    " 所生成的数据文件的名称
-    let g:gutentags_ctags_tagfile = '.tags'
-
-    " 同时开启 ctags 和 gtags 支持
-    let g:gutentags_modules = []
-    if executable('ctags')
-	    let g:gutentags_modules += ['ctags']
-    endif
-       if executable('gtags-cscope') && executable('gtags')
-	    let g:gutentags_modules += ['gtags_cscope']
-    endif
-
-    " 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
-    let s:vim_tags = expand('~/.cache/tags')
-    let g:gutentags_cache_dir = s:vim_tags
-    
-    " 调试开关
-    " let g:gutentags_trace = 1
-
-    " 配置 ctags 的参数
-    let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
-    let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
-    let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
-
-    " 检测 ~/.cache/tags 不存在就新建
-    if !isdirectory(s:vim_tags)
-        silent! call mkdir(s:vim_tags, 'p')
-    endif
-endfunction
-call GutenTags()
-
 function Nerdtree()
     "  右侧显示文件树
     let g:NERDTreeWinPos=0
@@ -255,7 +220,7 @@ function Tagbar()
     
     nmap <leader>t :Tagbar<CR>
 endfunction 
-" call Tagbar()
+call Tagbar()
 
 function Ale()
     let g:ale_sign_column_always = 0  " 侧边栏不可见，只有错误的时候才显示
@@ -457,7 +422,9 @@ call LspSetting()
 
 function Ack()
     cnoreabbrev Ack Ack!
-    let g:ackprg = 'ag --nogroup --nocolor --column'
+    if executable('rg')
+        let g:ackprg = 'rg --vimgrep'
+    endif
 endfunction
 call Ack()
 
@@ -485,11 +452,35 @@ endfunction
 call EchoDoc()
 
 function MLeaderF()
-    let g:Lf_ShortcutF = '<leader>f'
-    let g:Lf_RootMarkers = g:urootmarks
-    let g:Lf_DefaultExternalTool = 'ag'
+    let g:Lf_RootMarkers = g:urootmarks " 设置工程目录去识别工程
+    let g:Lf_DefaultExternalTool = 'rg' " 默认使用ag去查询，silversearch-ag 这个比grep快很多
     let g:Lf_WindowHeight = 0.30
-    let g:Lf_ctags = 'gtags'
+    let g:Lf_IgnoreCurrentBufferName = 1 " 搜索结果不显示当前的buffer名称
+    "let g:Lf_WindowPosition = 'popup'
+    let g:Lf_PreviewInPopup = 1 " 使用popup预览显示
+    let g:Lf_PreviewResult = {
+        \ 'File': 0,
+        \ 'Buffer': 0,
+        \ 'Mru': 0,
+        \ 'Tag': 0,
+        \ 'BufTag': 1,
+        \ 'Function': 1,
+        \ 'Line': 1,
+        \ 'Colorscheme': 0,
+        \ 'Rg': 1,
+        \ 'Gtags': 0
+        \}
+    let g:Lf_PreviewHorizontalPosition = 'center' " 指定 popup window / floating window 的位置
+    let g:Lf_PreviewPopupWidth = &columns * 3 / 4 " 指定 popup window / floating window 的宽度
+    let g:Lf_WildIgnore={ 'file':['*.lib', '*.a', '*.o', '*.d', '*.so', ],'dir':['tmp', '.git', 'api', 'attachments', 'images', 'img', 'download',  ]}
+    
+    " 配合vim-gutentags使用
+    let g:Lf_GtagsAutoGenerate = 0
+    let g:Lf_GtagsGutentags = 1
+    
+    if executable('gtags-cscope')
+        let g:Lf_ctags = 'gtags'   "使用gtags索引，gutentags会自动根据工程创建索引
+    endif
 
     if has('nvim')
         let s:cachedir = expand(stdpath('cache'))
@@ -503,8 +494,51 @@ function MLeaderF()
     endif
 
     let g:Lf_CacheDirectory = s:cachedir
+
+    let g:Lf_ShortcutF = '<leader>ff'
+    let g:Lf_ShortcutB = '<leader>fb'
+    
+    let g:Lf_PopupColorscheme = 'catppuccin_mocha'
+    let g:Lf_StlColorscheme = 'catppuccin_mocha'
 endfunction
 call MLeaderF()
+
+function GutenTags()
+    " --------------- gutentags 配置------------------
+    " gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
+    let g:gutentags_project_root = g:urootmarks 
+
+    " 所生成的数据文件的名称
+    let g:gutentags_ctags_tagfile = '.tags'
+
+    " 同时开启 ctags 和 gtags 支持
+    let g:gutentags_modules = []
+    if executable('ctags')
+	    let g:gutentags_modules += ['ctags']
+    endif
+    if executable('gtags-cscope') && executable('gtags')
+	    let g:gutentags_modules += ['gtags_cscope']
+    endif
+
+    " 将自动生成的 tags 文件全部放入 leaderf 配置的cache 目录中，避免污染工程目录
+    let s:vim_tags = expand(g:Lf_CacheDirectory.'/.LfCache/gtags')
+    let g:gutentags_cache_dir = s:vim_tags
+    
+    " 调试开关
+    " let g:gutentags_trace = 1
+
+    " 配置 ctags 的参数
+    let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+    let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+    let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+
+    " 检测 ~/.cache/tags 不存在就新建
+    if !isdirectory(s:vim_tags)
+        silent! call mkdir(s:vim_tags, 'p')
+    endif
+endfunction
+call GutenTags()
+
 
 "Command命令	常规模式	可视化模式	运算符模式	插入模式	命令行模式
 ":map	            √	        √	        √	 	 
@@ -539,23 +573,19 @@ endfunction
 call NerdTreeShortKey()
 
 function BasicShortKey()
-    nmap <S-f> :ClangFormat <CR>
-    nmap <S-a> :Ack <cword><CR>
-    nmap <S-q> :q!<CR>
-    nmap <F6> :call asyncrun#quickfix_toggle(8)<CR>
-endfunction
-call BasicShortKey()
-
-function CShortKey()
+    nmap <leader>bf :ClangFormat <CR>
+    nmap <leader>bs :Ack <cword><CR>
+    nmap <leader>bq :q!<CR>
     " 快捷键 配置 <C-R>插入寄存器数据，=是vim的特殊寄存器
-    nmap <C-h> :vsp <C-R>=expand('%:p:r').'.h'<CR><CR>
-    nmap <C-p> :vsp <C-R>=expand('%:p:r').'.cpp'<CR><CR>
-    nmap <C-c> :vsp <C-R>=expand('%:p:r').'.c'<CR><CR>
+    nmap <leader>bh :vsp <C-R>=expand('%:p:r').'.h'<CR><CR>
+    nmap <leader>bp :vsp <C-R>=expand('%:p:r').'.cpp'<CR><CR>
+    nmap <leader>bc :vsp <C-R>=expand('%:p:r').'.c'<CR><CR>
     
     " 设置 F5 从工程根目录编译整个工程 
     nmap <silent> <F5> :AsyncRun -cwd=<root> make -j8 <CR>
+    nmap <silent> <F6> :call asyncrun#quickfix_toggle(8)<CR>
 endfunction
-call CShortKey()
+call BasicShortKey()
 
 function AleShortKey()
     nnoremap <leader>ap <Plug>(ale_previous_wrap)
@@ -578,11 +608,39 @@ endfunction
 call GoShortKey()
 
 function SurroundShortKey()
-    nmap <C-s>d <Plug>Dsurround
-    nmap <C-s>c <Plug>Csurround
-    imap <C-s>g <Plug>Isurround
+    nmap <leader>sd <Plug>Dsurround
+    nmap <leader>sc <Plug>Csurround
+    imap <leader>si <Plug>Isurround
 endfunction
 call SurroundShortKey()
+
+function LeaderfShortKey()
+    "文件搜索。
+    nnoremap <silent> <leader>ff :Leaderf file<CR>
+    "历史打开过的文件。
+    nnoremap <silent> <leader>fm :Leaderf mru<CR>
+    "Buffer。
+    nnoremap <silent> <leader>fb :Leaderf buffer<CR>
+    "函数搜索（仅当前文件里）。
+    nnoremap <silent> <leader>ft :LeaderfBufTag <CR>
+    " rg 搜索单词
+    nnoremap <silent> <leader>fr :Leaderf rg<CR>
+    "通过Leaderf rg在当前缓存中搜索光标下的字符串。
+    noremap <leader>fs :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
+    "通过Leaderf rg搜索光标下的字符串。
+    noremap <leader>fw :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
+    "搜索当前光标下函数引用，如果搜索结果只有一个则直接跳转。
+    noremap <leader>fc :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+    "搜索当前光标下函数定义，如果搜索结果只有一个则直接跳转。
+    noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+    "打开上一次gtags搜索窗口。
+    noremap <leader>fR :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
+    "跳转到下一个搜索结果。
+    noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
+    "跳转到上一个搜索结果。
+    noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
+endfunction
+call LeaderfShortKey()
 
 function AutoCommand()
     autocmd! bufwritepost $HOME/.vimrc source %
@@ -590,10 +648,40 @@ endfunction
 call AutoCommand()
 
 function WhichKey()
+    let g:which_key_map = {
+                \'<F5>': 'call make in quickfix window', 
+                \'<F6>': 'open/close quickfix windows', 
+                \}
+    let g:which_key_map.b = {
+                \'name': 'basic shortkey',
+                \'f': 'format current file', 
+                \'s': 'search current word in project', 
+                \'q': 'q! quit file',
+                \'h': 'open *.h', 
+                \'p': 'open *.cpp', 
+                \'c': 'open *.c',
+                \}
     let g:which_key_map.a = {'name': 'ale', 'p': "ale previous wrap", 'n': 'ale next wrap', 'd': 'ale detail', 'i': 'ale info'}
-    let g:which_key_map.c = { 'name': "nerdtree close" }
+    let g:which_key_map.c = {'name': "nerdtree close" }
     let g:which_key_map.g = {'name': 'go debug', 'b': 'go build', 'R': 'go run', 'i': 'go imports', 'a': 'add break point', 'r': 'remove breakpoint', 'd': 'debug run' }
-    let g:which_key_map.n = { 'name': 'nerdtree open' }
+    let g:which_key_map.n = {'name': 'nerdtree open' }
+    let g:which_key_map.f = {
+                \'name': 'leaderf', 
+                \'f': 'search file', 
+                \'m': 'search history file', 
+                \'b': 'search buffer', 
+                \'t': 'bug tagbar', 
+                \'r': 'call rg search',
+                \'s': 'search current word in buf',
+                \'w': 'search current word in project',
+                \'c': 'search function reference and jump',
+                \'d': 'search function define and jump',
+                \'R': 'open gtags preview windows',
+                \'n': 'jump next gtags result',
+                \'p': 'jump preview gtags result'
+                \}
+    let g:which_key_map.s = {'name': 'surround', 'd': 'delete surround key', 'c': 'change surround key', 'i': 'insert surround key'}
+
     call which_key#register('<Space>', "g:which_key_map")
 endfunction
 call WhichKey()
