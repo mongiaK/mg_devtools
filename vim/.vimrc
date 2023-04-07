@@ -1,6 +1,6 @@
 let g:vimuser = "god"
 let g:useremail = "god@sky.com"
-let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project'] 
+let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project', '.vscode'] 
 
 function CheckPlugVim()
     let $plugdir = expand("$HOME/.vim/autoload")
@@ -96,13 +96,16 @@ Plug 'tpope/vim-fugitive'
 
 " Plug 'kien/ctrlp.vim'
 
+" 单词标亮
+Plug 'mongiaK/mark.vim'
+
 call plug#end()
 
 syntax on
 set t_Co=256 "设置终端为256色，但是不能满足一些gui的颜色"
 
-colorscheme molokai
-" colorscheme catppuccin_mocha
+" colorscheme molokai
+colorscheme catppuccin_mocha
 
 if has("termguicolors") "开启终端gui真彩色
     " enable true color
@@ -241,7 +244,7 @@ function Ale()
 
     " ------------------  ale c   --------------------------
     let b:ale_c_parse_makefile = 1
-    let g:ale_c_parse_compile_commands = 0
+    let g:ale_c_parse_compile_commands = 1
     "
 
     " 不开启文件变了就立刻检查
@@ -323,7 +326,11 @@ function SetTitle()
             call setline(20, "#endif //".toupper(expand("%:t:r"))."_H") 
         elseif expand("%:e") == 'h' 
             call Comment(1, "*")
-            call setline(10, "#pragma once") 
+            " call setline(10, "#pragma once") 
+            call setline(10, "#ifndef __".toupper(expand("%:t:r"))."_H__") 
+            call setline(11, "#define __".toupper(expand("%:t:r"))."_H__") 
+            call setline(12, "#endif // __".toupper(expand("%:t:r"))."_H__") 
+
         elseif expand("%:e") == 'py'
             call setline(1,"#!/usr/bin/python")
             call setline(2,"# -*- coding: utf-8 -*- ")
@@ -332,13 +339,13 @@ function SetTitle()
             call Comment(1, "*")
         elseif &filetype == 'c' 
             call Comment(1, "*")
-            call setline(10, "#include \"".expand("%:t:r").".h\"") 
+            " call setline(10, \"#include \"".expand("%:t:r").".h\"") 
         elseif &filetype == 'cpp'
             call Comment(1, "*")
-            call setline(10, "#include \"".expand("%:t:r").".h\"")
+            " call setline(10, \"#include \"".expand("%:t:r").".h\"")
         elseif &filetype == 'cc'
             call Comment(1, "*")
-            call setline(10, "#include \"".expand("%:t:r").".h\"")
+            " call setline(10, \"#include \"".expand("%:t:r").".h\"")
         endif
     endif
 endfunction
@@ -567,8 +574,8 @@ call GutenTags()
 " <unique> : 检测新的键映射是否存在，存在则失败
 
 function NerdTreeShortKey()
-    nmap <leader>n :NERDTree<CR>
-    nmap <leader>c :NERDTreeClose<CR>
+    nmap <leader>no :NERDTree<CR>
+    nmap <leader>nc :NERDTreeClose<CR>
 endfunction
 call NerdTreeShortKey()
 
@@ -661,10 +668,22 @@ function WhichKey()
                 \'p': 'open *.cpp', 
                 \'c': 'open *.c',
                 \}
-    let g:which_key_map.a = {'name': 'ale', 'p': "ale previous wrap", 'n': 'ale next wrap', 'd': 'ale detail', 'i': 'ale info'}
-    let g:which_key_map.c = {'name': "nerdtree close" }
-    let g:which_key_map.g = {'name': 'go debug', 'b': 'go build', 'R': 'go run', 'i': 'go imports', 'a': 'add break point', 'r': 'remove breakpoint', 'd': 'debug run' }
-    let g:which_key_map.n = {'name': 'nerdtree open' }
+    let g:which_key_map.a = {
+                \'name': 'ale', 
+                \'p': "ale previous wrap", 
+                \'n': 'ale next wrap', 
+                \'d': 'ale detail', 
+                \'i': 'ale info'
+                \}
+    let g:which_key_map.g = {
+                \'name': 'go debug', 
+                \'b': 'go build', 
+                \'R': 'go run', 
+                \'i': 'go imports', 
+                \'a': 'add break point', 
+                \'r': 'remove breakpoint', 
+                \'d': 'debug run' 
+                \}
     let g:which_key_map.f = {
                 \'name': 'leaderf', 
                 \'f': 'search file', 
@@ -680,7 +699,21 @@ function WhichKey()
                 \'n': 'jump next gtags result',
                 \'p': 'jump preview gtags result'
                 \}
-    let g:which_key_map.s = {'name': 'surround', 'd': 'delete surround key', 'c': 'change surround key', 'i': 'insert surround key'}
+    let g:which_key_map.s = {
+                \'name': 'surround', 
+                \'d': 'delete surround key', 
+                \'c': 'change surround key', 
+                \'i': 'insert surround key'
+                \}
+    let g:which_key_map.n = {
+                \'name': 'NERDTree', 
+                \'o': 'NERDTree open', 
+                \'c': 'NERDTree close',
+                \}
+    let g:which_key_map.m = {
+                \'name': 'mark word',
+                \}
+
 
     call which_key#register('<Space>', "g:which_key_map")
 endfunction
