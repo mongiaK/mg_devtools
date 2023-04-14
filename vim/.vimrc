@@ -21,15 +21,15 @@ call plug#begin($plugdir)  " 表示插件安装在~/.vim/autoload 目录
 Plug 'ludovicchabant/vim-gutentags'
 
 " 显示快捷键
-Plug 'liuchengxu/vim-which-key'
+Plug 'liuchengxu/vim-which-key',  { 'on': ['WhichKey', 'WhichKey!'] }
 
 " 显示文件函数，变量
-Plug 'majutsushi/tagbar'
+" Plug 'majutsushi/tagbar'
 
 " vim 配色库，很多种
 " Plug 'flazz/vim-colorschemes'
 Plug 'tomasr/molokai'
-Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+" Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 
 " 目录树
 Plug 'scrooloose/nerdtree'
@@ -44,16 +44,16 @@ Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
 
 " vim go开发插件
-Plug 'fatih/vim-go'
+Plug 'fatih/vim-go', { 'for': 'go' }
 
 " 注释插件
-Plug 'vim-scripts/DoxygenToolkit.vim'
+" Plug 'vim-scripts/DoxygenToolkit.vim'
 
 " 格式化插件，依赖于clangformat
-Plug 'rhysd/vim-clang-format'
+Plug 'rhysd/vim-clang-format', { 'for': 'c' }
 
 " vim 调试go工程插件
-Plug 'sebdah/vim-delve'
+Plug 'sebdah/vim-delve', { 'for': 'go' }
 
 " 替代tagbar
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
@@ -74,10 +74,10 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 " vim markdown 文件插件
-Plug 'plasticboy/vim-markdown'
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 
 " markdown 文件预览
-Plug 'iamcco/markdown-preview.vim'
+Plug 'iamcco/markdown-preview.vim' , { 'for': 'markdown' }
 
 " 自动括号，大括号等补全
 Plug 'tpope/vim-surround'
@@ -96,16 +96,21 @@ Plug 'tpope/vim-fugitive'
 
 " Plug 'kien/ctrlp.vim'
 
+Plug 'sheerun/vim-polyglot'
+
 " 单词标亮
 Plug 'mongiaK/mark.vim'
+
+" chatgpt机器人补全
+" Plug 'github/copilot.vim'
 
 call plug#end()
 
 syntax on
 set t_Co=256 "设置终端为256色，但是不能满足一些gui的颜色"
 
-" colorscheme molokai
-colorscheme catppuccin_mocha
+colorscheme molokai
+" colorscheme catppuccin_mocha
 
 if has("termguicolors") "开启终端gui真彩色
     " enable true color
@@ -650,7 +655,7 @@ endfunction
 call LeaderfShortKey()
 
 function AutoCommand()
-    autocmd! bufwritepost $HOME/.vimrc source %
+"    autocmd! bufwritepost $HOME/.vimrc source %
 endfunction
 call AutoCommand()
 
@@ -714,8 +719,8 @@ function WhichKey()
                 \'name': 'mark word',
                 \}
 
-
-    call which_key#register('<Space>', "g:which_key_map")
+    autocmd! User vim-which-key call which_key#register('<Space>', 'g:which_key_map')
+"   call which_key#register('<Space>', "g:which_key_map")
 endfunction
 call WhichKey()
 
