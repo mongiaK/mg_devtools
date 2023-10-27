@@ -1,5 +1,5 @@
-let g:vimuser = "god"
-let g:useremail = "god@sky.com"
+let g:vimuser = "mongia"
+let g:useremail = "mongiaK@outlook.com"
 let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project', '.vscode'] 
 
 function CheckPlugVim()
@@ -24,15 +24,15 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'liuchengxu/vim-which-key',  { 'on': ['WhichKey', 'WhichKey!'] }
 
 " 显示文件函数，变量
-" Plug 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar', {'on' : 'Tagbar'}
 
 " vim 配色库，很多种
 " Plug 'flazz/vim-colorschemes'
 Plug 'tomasr/molokai'
-" Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 
 " 目录树
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree', {'on': ['NERDTreeClose', 'NERDTree']}
 
 " 异步执行插件
 Plug 'skywind3000/asyncrun.vim'
@@ -50,10 +50,13 @@ Plug 'fatih/vim-go', { 'for': 'go' }
 " Plug 'vim-scripts/DoxygenToolkit.vim'
 
 " 格式化插件，依赖于clangformat
-Plug 'rhysd/vim-clang-format', { 'for': 'c' }
+Plug 'rhysd/vim-clang-format', { 'for': ['c', 'cpp', 'cc', 'h', 'hpp'] }
 
 " vim 调试go工程插件
 Plug 'sebdah/vim-delve', { 'for': 'go' }
+
+" rust 
+Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 
 " 替代tagbar
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
@@ -79,7 +82,7 @@ Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 " markdown 文件预览
 Plug 'iamcco/markdown-preview.vim' , { 'for': 'markdown' }
 
-" 自动括号，大括号等补全
+" 添加包围符号，比如‘ “ [ 等
 Plug 'tpope/vim-surround'
 
 " 自动匹配括号等
@@ -89,20 +92,27 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'vim-airline/vim-airline'
 
 " 显示函数参数
-Plug 'Shougo/echodoc.vim'
+" Plug 'Shougo/echodoc.vim'
 
 " git 修改
 Plug 'tpope/vim-fugitive'
 
 " Plug 'kien/ctrlp.vim'
 
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
 
 " 单词标亮
 Plug 'mongiaK/mark.vim'
 
 " chatgpt机器人补全
 " Plug 'github/copilot.vim'
+
+" 语法高亮
+""Plug 'jackguo380/vim-lsp-cxx-highlight'
+Plug 'octol/vim-cpp-enhanced-highlight'
+
+" 代码片段
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
@@ -169,8 +179,6 @@ set autoindent
 set expandtab
 " 设置tab等于4个空格
 set tabstop=4
-" 设置当前工程的工作目录，将系统的头文件加进来，方便查看系统函数
-set path=.,/usr/include,/usr/local/include
 " 设置右下角显示完整命令
 " set showcmd
 " 设置c语言自动缩进
@@ -186,7 +194,7 @@ set timeoutlen=300
 
 " 设置leader键
 let g:mapleader = "\<Space>"
-nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
+noremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
 let g:which_key_map = {}
 
 function Airline()
@@ -464,6 +472,7 @@ endfunction
 call EchoDoc()
 
 function MLeaderF()
+    let g:Lf_WorkingDirectoryMode = 'AF'
     let g:Lf_RootMarkers = g:urootmarks " 设置工程目录去识别工程
     let g:Lf_DefaultExternalTool = 'rg' " 默认使用ag去查询，silversearch-ag 这个比grep快很多
     let g:Lf_WindowHeight = 0.30
@@ -484,7 +493,7 @@ function MLeaderF()
         \}
     let g:Lf_PreviewHorizontalPosition = 'center' " 指定 popup window / floating window 的位置
     let g:Lf_PreviewPopupWidth = &columns * 3 / 4 " 指定 popup window / floating window 的宽度
-    let g:Lf_WildIgnore={ 'file':['*.lib', '*.a', '*.o', '*.d', '*.so', ],'dir':['tmp', '.git', 'api', 'attachments', 'images', 'img', 'download',  ]}
+    let g:Lf_WildIgnore={ 'file':['*.lib', '*.a', '*.o', '*.d', '*.so', ],'dir':['tmp', '.git', 'api', 'attachments', 'images', 'img', 'download', 'obj' ]}
     
     " 配合vim-gutentags使用
     let g:Lf_GtagsAutoGenerate = 0
@@ -551,6 +560,17 @@ function GutenTags()
 endfunction
 call GutenTags()
 
+function Coc()
+    let g:coc_global_extensions =[
+    \ 'coc-json',
+    \ 'coc-vimlsp',
+    \ 'coc-clangd',
+    \ 'coc-pyright',
+    \ 'coc-snippets',
+    \ 'coc-sh',
+    \ 'coc-git']
+endfunction
+call Coc()
 
 "Command命令	常规模式	可视化模式	运算符模式	插入模式	命令行模式
 ":map	            √	        √	        √	 	 
@@ -596,6 +616,13 @@ function BasicShortKey()
     " 设置 F5 从工程根目录编译整个工程 
     nmap <silent> <F5> :AsyncRun -cwd=<root> make -j8 <CR>
     nmap <silent> <F6> :call asyncrun#quickfix_toggle(8)<CR>
+
+    nmap <C-p> :bp<CR>
+    nmap <C-n> :bn<CR>
+
+    " Make <CR> to accept selected completion item or notify coc.nvim to format
+    " <C-g>u breaks current undo, please make your own choice
+    inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm(): "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 endfunction
 call BasicShortKey()
 
@@ -636,7 +663,7 @@ function LeaderfShortKey()
     "函数搜索（仅当前文件里）。
     nnoremap <silent> <leader>ft :LeaderfBufTag <CR>
     " rg 搜索单词
-    nnoremap <silent> <leader>fr :Leaderf rg<CR>
+    nnoremap <silent> <leader>fr :Leaderf rg -w<CR>
     "通过Leaderf rg在当前缓存中搜索光标下的字符串。
     noremap <leader>fs :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
     "通过Leaderf rg搜索光标下的字符串。
