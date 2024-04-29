@@ -1,46 +1,29 @@
-return function()
-  require("indent_blankline").setup({
-    char = "│",
-    show_first_indent_level = true,
-    filetype_exclude = {
-      "neo-tree",
-      "TelescopePrompt",
-      "dashboard",
-      "dotooagenda",
-      "flutterToolsOutline",
-      "fugitive",
-      "git",
-      "gitcommit",
-      "help",
-      "json",
-      "log",
-      "markdown",
-      "peekaboo",
-      "startify",
-      "todoist",
-      "txt",
-      "vimwiki",
-      "vista",
-    },
-    buftype_exclude = { "terminal", "nofile" },
-    show_trailing_blankline_indent = false,
-    show_current_context = true,
-    context_patterns = {
-      "^if",
-      "^table",
-      "block",
-      "class",
-      "for",
-      "function",
-      "if_statement",
-      "import",
-      "list_literal",
-      "method",
-      "selector",
-      "type",
-      "var",
-      "while",
-    },
-    space_char_blankline = "  ",
-  })
+local _M = {}
+
+function _M.config()
+	require("indent_blankline").setup({
+		indent = {
+			char = "│",
+			tab_char = "│",
+		},
+		show_current_context = false,
+		scope = { enabled = false },
+		exclude = {
+			filetypes = {
+				"help",
+				"alpha",
+				"dashboard",
+				"neo-tree",
+				"Trouble",
+				"trouble",
+				"lazy",
+				"mason",
+				"notify",
+				"toggleterm",
+				"lazyterm",
+			},
+		},
+	})
 end
+
+return _M

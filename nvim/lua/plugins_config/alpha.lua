@@ -1,9 +1,11 @@
-return function()
+local _M = {}
+
+function _M.config()
 	local alpha = require("alpha")
 	local dashboard = require("alpha.themes.dashboard")
-    -- generate from https://manytools.org/hacker-tools/ascii-banner/
-    local logo = [[
-███╗   ███╗ ██████╗ ███╗   ██╗ ██████╗ ██╗ █████╗ 
+	-- generate from https://manytools.org/hacker-tools/ascii-banner/
+	local logo = [[
+███╗   ███╗ ██████╗ ███╗   ██╗ ██████╗ ██╗ █████╗
 ████╗ ████║██╔═══██╗████╗  ██║██╔════╝ ██║██╔══██╗
 ██╔████╔██║██║   ██║██╔██╗ ██║██║  ███╗██║███████║
 ██║╚██╔╝██║██║   ██║██║╚██╗██║██║   ██║██║██╔══██║
@@ -151,3 +153,5 @@ return function()
 		end,
 	})
 end
+
+return _M
