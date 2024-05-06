@@ -63,4 +63,11 @@ return {
 		lazy = true,
 		config = require("plugins_config.indent").config,
 	},
+	-- 高亮标记
+	{
+		"mongiaK/mg_mark.nvim",
+		lazy = true,
+		config = require("plugins_config.mg_mark").config,
+		keys = require("plugins_config.mg_mark").keys(),
+	},
 }
