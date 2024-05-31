@@ -34,17 +34,22 @@ function _M.config()
 				package_uninstalled = "✗",
 			},
 		},
+		ensure_installed = {
+			"shfmt",
+			"codelldb",
+			"delve",
+			"debugpy",
+			"stylua",
+			"sumneko_lua",
+		},
 	})
 	mason_lspconfig.setup({
 		ensure_installed = {
 			"bashls",
-			"stylua",
-			"codelldb",
-			"shfmt",
-			"delve",
 			"clangd",
-			"debugpy",
 			"gopls",
+			"pyright",
+			"rust_analyzer",
 		},
 	})
 

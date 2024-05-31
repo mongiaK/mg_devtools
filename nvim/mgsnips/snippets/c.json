@@ -1,0 +1,91 @@
+{
+    "cmd_header": {
+        "prefix": "#cmd",
+        "body": [
+            "#include <getopt.h>",
+            "#include <string.h>",
+            "#include <limits.h>"
+        ]
+    },
+    "cmd_parse": {
+        "prefix": "cmd_parse",
+        "body": [
+            "char *cmd_long_options_to_short_options(const struct option options[]) {",
+            "\tchar short_options[UCHAR_MAX * 3 + 1];",
+            "\tchar *p = short_options;",
+            "",
+            "\tfor (; options->name; options++) {",
+            "\t\tconst struct option *o = options;",
+            "\t\tif (o->flag == NULL && o->val > 0 && o->val <= UCHAR_MAX) {",
+            "\t\t\t*p++ = o->val;",
+            "\t\t\tif (o->has_arg == required_argument) {",
+            "\t\t\t\t*p++ = ':';",
+            "\t\t\t} else if (o->has_arg == optional_argument) {",
+            "\t\t\t\t*p++ = ':';",
+            "\t\t\t\t*p++ = ':';",
+            "\t\t\t}",
+            "\t\t}",
+            "\t}",
+            "\t*p++ = '\\0';",
+            "",
+            "\treturn strdup(short_options);",
+            "}",
+            "",
+            "void parse_options(int argc, char *argv[]) {",
+            "\tstatic const struct option long_options[] = {",
+            "\t\t{\"help\", no_argument, NULL, 'h'},",
+            "\t\t{\"version\", no_argument, NULL, 'v'},",
+            "\t\t{NULL, 0, NULL, 0},",
+            "\t};",
+            "",
+            "\tchar *short_options = cmd_long_options_to_short_options(long_options);",
+            "\tfor (;;) {",
+            "\t\tint c = getopt_long(argc, argv, short_options, long_options, NULL);",
+            "\t\tif (-1 == c) {",
+            "\t\t\tbreak;",
+            "\t\t}",
+            "",
+            "\t\tswitch (c) {",
+            "\t\tcase 'h':",
+            "\t\t\tbreak;",
+            "\t\tcase 'v':",
+            "\t\t\tbreak;",
+            "\t\tdefault:",
+            "\t\t\tabort();",
+            "\t\t}",
+            "\t}",
+            "",
+            "\tfree(short_options);",
+            "}"
+        ]
+    },
+    "net_header": {
+        "prefix": "#net",
+        "body": [
+            "#include <sys/types.h>",
+            "#include <sys/socket.h>",
+            "#include <netinet/in.h>",
+            "#include <arpa/inet.h>",
+            "#include <unistd.h>",
+            "#include <fcntl.h>",
+            "#include <errno.h>"
+        ]
+    },
+    "sigfunc": {
+        "prefix": "sigfunc",
+        "body": [
+            "void sigfunc(int signo) {",
+            "\tswitch(signo) {",
+            "\t\tcase ${1:SIGINT}:",
+            "\t\t\tprintf(\"Recieved ${1}. Exiting...\\n\");",
+            "\t\t\texit(0);",
+            "\t\tcase ${2:SIGTERM}:",
+            "\t\t\tprintf(\"Recieved ${2}. Exiting...\\n\");",
+            "\t\t\texit(0);",
+            "\t\tdefault:",
+            "\t\t\tprintf(\"Recieved signal %d\\n\", signo);",
+            "\t}",
+            "}"
+        ]
+    }
+}

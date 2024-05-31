@@ -1,3 +1,5 @@
+local vim = vim
+
 local function map_leader()
 	vim.g.mapleader = " "
 	vim.g.maplocalleader = " "

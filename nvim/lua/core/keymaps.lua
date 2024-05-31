@@ -5,6 +5,7 @@ local function init()
 	vim.keymap.set("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Lazy" })
 	vim.keymap.set("n", "<leader>H", "<cmd>checkhealth<cr>", { desc = "Check Health" })
 	vim.keymap.set("n", "<leader>Q", "<cmd>wq<cr>", { desc = "Quit(save)" })
+	vim.keymap.set("n", "<leader>C", "<cmd>lclose<cr>", { desc = "Close Localist" })
 
 	vim.keymap.set("n", "C-s", "<cmd>wa<cr>", { desc = "Save" })
 	vim.keymap.set("n", "S-q", "<cmd>q!<cr>", { desc = "Quit(not save)" })

@@ -1,20 +1,42 @@
 local _M = {}
 
-function _M.config()
-	local snippet_path = vim.fn.stdpath("config") .. "/snips/"
-	if not vim.tbl_contains(vim.opt.rtp:get(), snippet_path) then
-		vim.opt.rtp:append(snippet_path)
-	end
+function _M.keys()
+	return {
+		{
+			"<tab>",
+			function()
+				return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
+			end,
+			expr = true,
+			silent = true,
+			mode = "i",
+		},
+		{
+			"<tab>",
+			function()
+				require("luasnip").jump(1)
+			end,
+			mode = "s",
+		},
+		{
+			"<s-tab>",
+			function()
+				require("luasnip").jump(-1)
+			end,
+			mode = { "i", "s" },
+		},
+	}
+end
 
+function _M.config()
 	require("luasnip").config.set_config({
 		history = true,
-		update_events = "TextChanged,TextChangedI",
-		delete_check_events = "TextChanged,InsertLeave",
+		delete_check_events = "TextChanged",
 	})
 
-	require("luasnip.loaders.from_lua").lazy_load()
 	require("luasnip.loaders.from_vscode").lazy_load()
-	require("luasnip.loaders.from_snipmate").lazy_load()
+	require("luasnip.loaders.from_vscode").load({ paths = "~/.config/nvim/mgsnips" })
+	--	require("luasnip.loaders.from_snipmate").lazy_load()
 end
 
 return _M

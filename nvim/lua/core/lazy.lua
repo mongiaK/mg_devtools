@@ -1,5 +1,6 @@
 local config = require("core.config")
 local mg_datadir = config.mg_datadir
+local vim = vim
 local _M = {}
 
 function _M:load_lazy()

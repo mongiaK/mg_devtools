@@ -1,12 +1,4 @@
 return {
-	-- 代码片段
-	{
-		"L3MON4D3/LuaSnip",
-		dependencies = {
-			"rafamadriz/friendly-snippets",
-		},
-		config = require("plugins_config.luasnip").config,
-	},
 	-- 配置lsp客户端
 	{
 		"neovim/nvim-lspconfig",
@@ -28,6 +20,19 @@ return {
 			"jay-babu/mason-null-ls.nvim",
 		},
 	},
+	-- 代码片段
+	{
+		"L3MON4D3/LuaSnip",
+		lazy = true,
+		event = { "InsertEnter" },
+		dependencies = {
+			"rafamadriz/friendly-snippets",
+			"saadparwaiz1/cmp_luasnip",
+		},
+		keys = require("plugins_config.luasnip").keys(),
+		config = require("plugins_config.luasnip").config,
+	},
+
 	-- 自动补全插件
 	{
 		"hrsh7th/nvim-cmp",
