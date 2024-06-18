@@ -1,6 +1,8 @@
 let g:vimuser = "mongia"
 let g:useremail = "mongiaK@outlook.com"
-let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project', '.vscode'] 
+let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project', '.vscode']
+let $HTTP_PROXY = "http://192.168.1.34:7890"
+let $HTTPS_PROXY = "http://192.168.1.34:7890"
 
 function CheckPlugVim()
     let $plugdir = expand("$HOME/.vim/autoload")
@@ -32,7 +34,7 @@ Plug 'tomasr/molokai'
 Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 
 " 目录树
-Plug 'scrooloose/nerdtree', {'on': ['NERDTreeClose', 'NERDTree']}
+Plug 'scrooloose/nerdtree', {'on': ['NERDTreeClose', 'NERDTree', 'NERDTreeToggle']}
 
 " 异步执行插件
 Plug 'skywind3000/asyncrun.vim'
@@ -55,7 +57,7 @@ Plug 'rhysd/vim-clang-format', { 'for': ['c', 'cpp', 'cc', 'h', 'hpp'] }
 " vim 调试go工程插件
 Plug 'sebdah/vim-delve', { 'for': 'go' }
 
-" rust 
+" rust
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 
 " 替代tagbar
@@ -108,8 +110,9 @@ Plug 'mongiaK/mark.vim'
 " Plug 'github/copilot.vim'
 
 " 语法高亮
-""Plug 'jackguo380/vim-lsp-cxx-highlight'
+"Plug 'jackguo380/vim-lsp-cxx-highlight'
 Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'charlespascoe/vim-go-syntax'
 
 " 代码片段
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -119,8 +122,8 @@ call plug#end()
 syntax on
 set t_Co=256 "设置终端为256色，但是不能满足一些gui的颜色"
 
-colorscheme molokai
-" colorscheme catppuccin_mocha
+" colorscheme molokai
+colorscheme catppuccin_mocha
 
 if has("termguicolors") "开启终端gui真彩色
     " enable true color
@@ -128,14 +131,14 @@ if has("termguicolors") "开启终端gui真彩色
 endif
 
 " 设置文件读的格式,终端格式等等
-set fencs=utf-8,gbk 
+set fencs=utf-8,gbk
 set termencoding=utf-8
 set fileencoding=utf-8
 set encoding=utf-8
 " 关闭兼容模式
-set nocompatible    
+set nocompatible
 " 你输入查找内容的同时，vim就开始对你输入的内容进行匹配，并显示匹配的位置。打开这个选项，你可以即时看到查找的结果。
-set incsearch       
+set incsearch
 " 选项表示在查找时忽略大小写
 set ignorecase
 " 取消 set nowildmenu，将不能出现tab选择
@@ -186,7 +189,7 @@ set cindent
 " 设置鼠标可以在普通模式跟可视模式使用
 set mouse=nv
 " 设置tag索引文件查询目录，当使用gentags时可以去掉该选项
-" set tags=tags,../tags,../../tagsset 
+" set tags=tags,../tags,../../tagsset
 " 设置path路径，方便查询系统函数及库函数
 set path=.,/usr/include,/usr/local/include,/usr/include/c++/4.4.7,/usr/include/c++/4.4.4
 
@@ -200,7 +203,7 @@ let g:which_key_map = {}
 function Airline()
     let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
     let g:airline_theme="dark"      " 设置主题
-    
+
     " 开启tabline
     let g:airline#extensions#tabline#enabled = 1      "tabline中当前buffer两端的分隔字符
     let g:airline#extensions#tabline#left_sep = ' '   "tabline中未激活buffer两端的分隔字符
@@ -211,7 +214,7 @@ endfunction
 function VimGo()
     let g:go_template_autocreate = 0
     let g:go_template_file = ""
-endfunction 
+endfunction
 call VimGo()
 
 function Nerdtree()
@@ -225,7 +228,7 @@ function Nerdtree()
     let g:NERDTreeDirArrows = 1
     let g:NERDTreeShowBookmarks=1
     let g:NERDTreeShowHidden=1
-endfunction 
+endfunction
 call Nerdtree()
 
 function Tagbar()
@@ -233,9 +236,9 @@ function Tagbar()
     let g:tagbar_left = 0
     " tagbar 设置
     let g:tagbar_width = 30
-    
+
     nmap <leader>t :Tagbar<CR>
-endfunction 
+endfunction
 call Tagbar()
 
 function Ale()
@@ -263,7 +266,7 @@ function Ale()
     " 不开启文件变了就立刻检查
     let g:ale_lint_on_text_changed = 'never'
     " let g:ale_lint_on_insert_leave = 1
-    " let g:ale_lint_on_enter = 1 
+    " let g:ale_lint_on_enter = 1
     " let g:ale_completion_enabled = 1  "  开启自动补全
     " let g:ale_lint_on_save = 1
 
@@ -282,13 +285,13 @@ function Ale()
                 \   'css': ['prettier'],
                 \   'jsx': ['prettier'],
                 \}
-endfunction 
+endfunction
 cal Ale()
 
 function BuildComment()
     " 当新建 .h .c .hpp .cpp .mk .sh等文件时自动调用SetTitle 函数
     autocmd BufNewFile *.[ch],*.hpp,*.cpp,*.cc,Makefile,*.mk,*.sh,*.go,*.py exec ":call SetTitle()"
-endfunction 
+endfunction
 call BuildComment()
 
 " 加入注释
@@ -315,34 +318,34 @@ function Comment(start_line, label)
     call setline(a:start_line + 8, "")
 endfunction
 
-" 定义函数SetTitle，自动插入文件头 
+" 定义函数SetTitle，自动插入文件头
 function SetTitle()
-	if &filetype == 'make'
-		call Comment(1, "#")
-	elseif &filetype == 'sh' 
-		call setline(1,"#!/bin/bash") 
-		call setline(2,"")
+        if &filetype == 'make'
+                call Comment(1, "#")
+        elseif &filetype == 'sh'
+                call setline(1,"#!/bin/bash")
+                call setline(2,"")
         call Comment(3, "#")
-	else
-        if expand("%:e") == 'hpp' 
+        else
+        if expand("%:e") == 'hpp'
             call Comment(1, "*")
-            call setline(10, "#ifndef __".toupper(expand("%:t:r"))."_H__") 
-            call setline(11, "#define __".toupper(expand("%:t:r"))."_H__") 
-            call setline(12, "#ifdef __cplusplus") 
-            call setline(13, "extern \"C\"") 
-            call setline(14, "{") 
-            call setline(15, "#endif") 
-            call setline(16, "") 
-            call setline(17, "#ifdef __cplusplus") 
-            call setline(18, "}") 
-            call setline(19, "#endif") 
-            call setline(20, "#endif //".toupper(expand("%:t:r"))."_H") 
-        elseif expand("%:e") == 'h' 
+            call setline(10, "#ifndef __".toupper(expand("%:t:r"))."_H__")
+            call setline(11, "#define __".toupper(expand("%:t:r"))."_H__")
+            call setline(12, "#ifdef __cplusplus")
+            call setline(13, "extern \"C\"")
+            call setline(14, "{")
+            call setline(15, "#endif")
+            call setline(16, "")
+            call setline(17, "#ifdef __cplusplus")
+            call setline(18, "}")
+            call setline(19, "#endif")
+            call setline(20, "#endif //".toupper(expand("%:t:r"))."_H")
+        elseif expand("%:e") == 'h'
             call Comment(1, "*")
-            " call setline(10, "#pragma once") 
-            call setline(10, "#ifndef __".toupper(expand("%:t:r"))."_H__") 
-            call setline(11, "#define __".toupper(expand("%:t:r"))."_H__") 
-            call setline(12, "#endif // __".toupper(expand("%:t:r"))."_H__") 
+            " call setline(10, "#pragma once")
+            call setline(10, "#ifndef __".toupper(expand("%:t:r"))."_H__")
+            call setline(11, "#define __".toupper(expand("%:t:r"))."_H__")
+            call setline(12, "#endif // __".toupper(expand("%:t:r"))."_H__")
 
         elseif expand("%:e") == 'py'
             call setline(1,"#!/usr/bin/python")
@@ -350,9 +353,9 @@ function SetTitle()
             call Comment(3, "#")
         elseif expand("%:e") == 'go'
             call Comment(1, "*")
-        elseif &filetype == 'c' 
+        elseif &filetype == 'c'
             call Comment(1, "*")
-            " call setline(10, \"#include \"".expand("%:t:r").".h\"") 
+            " call setline(10, \"#include \"".expand("%:t:r").".h\"")
         elseif &filetype == 'cpp'
             call Comment(1, "*")
             " call setline(10, \"#include \"".expand("%:t:r").".h\"")
@@ -396,13 +399,13 @@ call Doxygen()
 function LspSetting()
     let g:lsp_settings_servers_dir='~/.vim/vim-lsp-settings/servers'
     let g:asyncomplete_auto_completeopt = 1
-    
+
     " noselect 触发补全不选第一个
     " noinsert
     " menuone
     " preview 触发补全选择第一个
     set completeopt=menuone,noinsert,noselect " preview
-    
+
     " pumvisible, popup menu 窗口存在返回非0，否则返回0
     inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 "    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -440,6 +443,11 @@ function LspSetting()
 endfunction
 call LspSetting()
 
+function GoHighlight()
+    let g:go_highlight_fields = 1
+endfunction
+call GoHighlight()
+
 function Ack()
     cnoreabbrev Ack Ack!
     if executable('rg')
@@ -450,7 +458,7 @@ call Ack()
 
 function AsyncRun()
     " 如果递归到根目录还没找到，那么文件所在目录就被当作项目目录。
-    let g:asyncrun_rootmarks = g:urootmarks 
+    let g:asyncrun_rootmarks = g:urootmarks
     " 自动打开 quickfix window ，高度为 8
     let g:asyncrun_open = 8
 endfunction
@@ -458,7 +466,7 @@ call AsyncRun()
 
 function VimDelve()
     let g:delve_new_command = 'new'
-endfunction 
+endfunction
 call VimDelve()
 
 function EchoDoc()
@@ -494,11 +502,11 @@ function MLeaderF()
     let g:Lf_PreviewHorizontalPosition = 'center' " 指定 popup window / floating window 的位置
     let g:Lf_PreviewPopupWidth = &columns * 3 / 4 " 指定 popup window / floating window 的宽度
     let g:Lf_WildIgnore={ 'file':['*.lib', '*.a', '*.o', '*.d', '*.so', ],'dir':['tmp', '.git', 'api', 'attachments', 'images', 'img', 'download', 'obj' ]}
-    
+
     " 配合vim-gutentags使用
     let g:Lf_GtagsAutoGenerate = 0
     let g:Lf_GtagsGutentags = 1
-    
+
     if executable('gtags-cscope')
         let g:Lf_ctags = 'gtags'   "使用gtags索引，gutentags会自动根据工程创建索引
     endif
@@ -518,7 +526,7 @@ function MLeaderF()
 
     let g:Lf_ShortcutF = '<leader>ff'
     let g:Lf_ShortcutB = '<leader>fb'
-    
+
     let g:Lf_PopupColorscheme = 'catppuccin_mocha'
     let g:Lf_StlColorscheme = 'catppuccin_mocha'
 endfunction
@@ -527,7 +535,7 @@ call MLeaderF()
 function GutenTags()
     " --------------- gutentags 配置------------------
     " gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
-    let g:gutentags_project_root = g:urootmarks 
+    let g:gutentags_project_root = g:urootmarks
 
     " 所生成的数据文件的名称
     let g:gutentags_ctags_tagfile = '.tags'
@@ -535,16 +543,16 @@ function GutenTags()
     " 同时开启 ctags 和 gtags 支持
     let g:gutentags_modules = []
     if executable('ctags')
-	    let g:gutentags_modules += ['ctags']
+            let g:gutentags_modules += ['ctags']
     endif
     if executable('gtags-cscope') && executable('gtags')
-	    let g:gutentags_modules += ['gtags_cscope']
+            let g:gutentags_modules += ['gtags_cscope']
     endif
 
     " 将自动生成的 tags 文件全部放入 leaderf 配置的cache 目录中，避免污染工程目录
     let s:vim_tags = expand(g:Lf_CacheDirectory.'/.LfCache/gtags')
     let g:gutentags_cache_dir = s:vim_tags
-    
+
     " 调试开关
     " let g:gutentags_trace = 1
 
@@ -565,6 +573,8 @@ function Coc()
     \ 'coc-json',
     \ 'coc-vimlsp',
     \ 'coc-clangd',
+    \ 'coc-go',
+    \ 'coc-rust-analyzer',
     \ 'coc-pyright',
     \ 'coc-snippets',
     \ 'coc-sh',
@@ -572,14 +582,14 @@ function Coc()
 endfunction
 call Coc()
 
-"Command命令	常规模式	可视化模式	运算符模式	插入模式	命令行模式
-":map	            √	        √	        √	 	 
-":nmap	            √	 	 	 	 
-":vmap	 	                    √	 	 	 
-":omap	 	 	                            √	 	 
-":map!	 	 	 	                                    √	        √
-":imap	 	 	 	                                    √	 
-":cmap	 	 	 	 	                                            √
+"Command命令    常规模式        可视化模式      运算符模式      插入模式        命令行模式
+":map               √           √               √
+":nmap              √
+":vmap                              √
+":omap                                              √
+":map!                                                              √           √
+":imap                                                              √
+":cmap                                                                              √
 " <Esc>代表Escape键:<CR>代表Enter键；<D>代表Command键。
 " Alt键可以使用<M-key>或<A-key>来表示。<C>代表Ctrl.
 " 对于组合键，可以用<C-Esc>代表Ctrl-Esc；使用<S-F1>表示Shift-F1
@@ -599,8 +609,25 @@ call Coc()
 " <unique> : 检测新的键映射是否存在，存在则失败
 
 function NerdTreeShortKey()
-    nmap <leader>no :NERDTree<CR>
-    nmap <leader>nc :NERDTreeClose<CR>
+    nmap <leader>e :NERDTreeToggle<CR>
+    " 在 NERDTree 中创建新文件
+    nnoremap <leader>na :NERDTreeFind<CR>:call nerdtree#execute('a', 'N')<CR>
+    
+    " 在 NERDTree 中创建新目录
+    nnoremap <leader>nd ERDTreeFind<CR>:call nerdtree#execute('a', 'D')<CR>
+    
+    " 在 NERDTree 中删除文件或目录
+    nnoremap <leader>nD :NERDTreeFind<CR>:call nerdtree#execute('d', 'Delete')<CR>
+    
+    " 在 NERDTree 中移动文件或目录
+    " nnoremap <leader>mv :NERDTreeFind<CR>:call nerdtree#execute('r', 'R')<CR>
+    
+    " 在 NERDTree 中重命名文件或目录
+    nnoremap <leader>nr :NERDTreeFind<CR>:call nerdtree#execute('r', 'Rename')<CR>
+    
+    " 在 NERDTree 中复制文件或目录
+    " nnoremap <leader>cp :NERDTreeFind<CR>:call nerdtree#execute('c', 'Copy')<CR>
+    " nmap <leader>nc :NERDTreeClose<CR>
 endfunction
 call NerdTreeShortKey()
 
@@ -612,8 +639,8 @@ function BasicShortKey()
     nmap <leader>bh :vsp <C-R>=expand('%:p:r').'.h'<CR><CR>
     nmap <leader>bp :vsp <C-R>=expand('%:p:r').'.cpp'<CR><CR>
     nmap <leader>bc :vsp <C-R>=expand('%:p:r').'.c'<CR><CR>
-    
-    " 设置 F5 从工程根目录编译整个工程 
+
+    " 设置 F5 从工程根目录编译整个工程
     nmap <silent> <F5> :AsyncRun -cwd=<root> make -j8 <CR>
     nmap <silent> <F6> :call asyncrun#quickfix_toggle(8)<CR>
 
@@ -639,7 +666,7 @@ function GoShortKey()
     nmap <leader>gb :GoBuild<CR>
     nmap <leader>gR :GoRun<CR>
     nmap <leader>gi :GoImports<CR>
-    
+
     nmap <leader>ga :DlvAddBreakpoint<CR>
     nmap <leader>gr :DlvRemoveBreakpoint<CR>
     nmap <leader>gd :DlvDebug<CR>
@@ -688,40 +715,40 @@ call AutoCommand()
 
 function WhichKey()
     let g:which_key_map = {
-                \'<F5>': 'call make in quickfix window', 
-                \'<F6>': 'open/close quickfix windows', 
+                \'<F5>': 'call make in quickfix window',
+                \'<F6>': 'open/close quickfix windows',
                 \}
     let g:which_key_map.b = {
                 \'name': 'basic shortkey',
-                \'f': 'format current file', 
-                \'s': 'search current word in project', 
+                \'f': 'format current file',
+                \'s': 'search current word in project',
                 \'q': 'q! quit file',
-                \'h': 'open *.h', 
-                \'p': 'open *.cpp', 
+                \'h': 'open *.h',
+                \'p': 'open *.cpp',
                 \'c': 'open *.c',
                 \}
     let g:which_key_map.a = {
-                \'name': 'ale', 
-                \'p': "ale previous wrap", 
-                \'n': 'ale next wrap', 
-                \'d': 'ale detail', 
+                \'name': 'ale',
+                \'p': "ale previous wrap",
+                \'n': 'ale next wrap',
+                \'d': 'ale detail',
                 \'i': 'ale info'
                 \}
     let g:which_key_map.g = {
-                \'name': 'go debug', 
-                \'b': 'go build', 
-                \'R': 'go run', 
-                \'i': 'go imports', 
-                \'a': 'add break point', 
-                \'r': 'remove breakpoint', 
-                \'d': 'debug run' 
+                \'name': 'go debug',
+                \'b': 'go build',
+                \'R': 'go run',
+                \'i': 'go imports',
+                \'a': 'add break point',
+                \'r': 'remove breakpoint',
+                \'d': 'debug run'
                 \}
     let g:which_key_map.f = {
-                \'name': 'leaderf', 
-                \'f': 'search file', 
-                \'m': 'search history file', 
-                \'b': 'search buffer', 
-                \'t': 'bug tagbar', 
+                \'name': 'leaderf',
+                \'f': 'search file',
+                \'m': 'search history file',
+                \'b': 'search buffer',
+                \'t': 'bug tagbar',
                 \'r': 'call rg search',
                 \'s': 'search current word in buf',
                 \'w': 'search current word in project',
@@ -732,16 +759,18 @@ function WhichKey()
                 \'p': 'jump preview gtags result'
                 \}
     let g:which_key_map.s = {
-                \'name': 'surround', 
-                \'d': 'delete surround key', 
-                \'c': 'change surround key', 
+                \'name': 'surround',
+                \'d': 'delete surround key',
+                \'c': 'change surround key',
                 \'i': 'insert surround key'
                 \}
-    let g:which_key_map.n = {
-                \'name': 'NERDTree', 
-                \'o': 'NERDTree open', 
-                \'c': 'NERDTree close',
-                \}
+   let g:which_key_map.n = {
+               \'name': 'NERDTree',
+               \'a': 'NERDTree add file',
+               \'d': 'NERDTree add dir',
+               \'D': 'NERDTree delete ',
+               \'r': 'NERDTree rename'
+               \}
     let g:which_key_map.m = {
                 \'name': 'mark word',
                 \}

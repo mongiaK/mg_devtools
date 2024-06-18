@@ -6,6 +6,7 @@ local function main()
 	require("core.options")
 
 	require("luasnip.loaders.from_vscode").load({ paths = "../snippets" })
+
 	vim.api.nvim_command("set background=dark")
 	vim.api.nvim_command("colorscheme tokyonight")
 end

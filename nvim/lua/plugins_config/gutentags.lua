@@ -1,4 +1,5 @@
 local _M = {}
+local vim = vim
 
 function _M.config()
 	vim.g.gutentags_ctags_exclude = {
