@@ -1,8 +1,8 @@
 let g:vimuser = "mongia"
 let g:useremail = "mongiaK@outlook.com"
-let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project', '.vscode']
-let $HTTP_PROXY = "http://192.168.1.34:7890"
-let $HTTPS_PROXY = "http://192.168.1.34:7890"
+let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project', '.vscode', 'node_modules']
+" let $HTTP_PROXY =
+" let $HTTPS_PROXY = 
 
 function CheckPlugVim()
     let $plugdir = expand("$HOME/.vim/autoload")
@@ -94,7 +94,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'vim-airline/vim-airline'
 
 " 显示函数参数
-" Plug 'Shougo/echodoc.vim'
+Plug 'Shougo/echodoc.vim'
 
 " git 修改
 Plug 'tpope/vim-fugitive'
@@ -113,6 +113,11 @@ Plug 'mongiaK/mark.vim'
 "Plug 'jackguo380/vim-lsp-cxx-highlight'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'charlespascoe/vim-go-syntax'
+Plug 'yuezk/vim-js'
+Plug 'maxmellon/vim-jsx-pretty'
+
+" 代码片段
+Plug 'honza/vim-snippets'
 
 " 代码片段
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -122,8 +127,8 @@ call plug#end()
 syntax on
 set t_Co=256 "设置终端为256色，但是不能满足一些gui的颜色"
 
-" colorscheme molokai
-colorscheme catppuccin_mocha
+colorscheme molokai
+" colorscheme catppuccin_mocha
 
 if has("termguicolors") "开启终端gui真彩色
     " enable true color
@@ -501,7 +506,7 @@ function MLeaderF()
         \}
     let g:Lf_PreviewHorizontalPosition = 'center' " 指定 popup window / floating window 的位置
     let g:Lf_PreviewPopupWidth = &columns * 3 / 4 " 指定 popup window / floating window 的宽度
-    let g:Lf_WildIgnore={ 'file':['*.lib', '*.a', '*.o', '*.d', '*.so', ],'dir':['tmp', '.git', 'api', 'attachments', 'images', 'img', 'download', 'obj' ]}
+    let g:Lf_WildIgnore={ 'file':['*.lib', '*.a', '*.o', '*.d', '*.so', ],'dir':['tmp', '.git', 'api', 'attachments', 'images', 'img', 'download', 'obj', 'node_modules' ]}
 
     " 配合vim-gutentags使用
     let g:Lf_GtagsAutoGenerate = 0
