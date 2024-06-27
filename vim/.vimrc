@@ -555,7 +555,7 @@ function GutenTags()
     endif
 
     " 将自动生成的 tags 文件全部放入 leaderf 配置的cache 目录中，避免污染工程目录
-    let s:vim_tags = expand(g:Lf_CacheDirectory.'/.LfCache/gtags')
+    let s:vim_tags = expand(g:Lf_CacheDirectory.'/LeaderF/gutentags')
     let g:gutentags_cache_dir = s:vim_tags
 
     " 调试开关
@@ -565,6 +565,7 @@ function GutenTags()
     let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
     let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
     let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+    let g:gutentags_ctags_exclude=['tmp', '.git', 'attachments', 'images', 'img', 'download', 'obj', 'node_modules']
 
     " 检测 ~/.cache/tags 不存在就新建
     if !isdirectory(s:vim_tags)
