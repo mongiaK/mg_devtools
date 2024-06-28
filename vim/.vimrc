@@ -85,7 +85,7 @@ Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'iamcco/markdown-preview.vim' , { 'for': 'markdown' }
 
 " 添加包围符号，比如‘ “ [ 等
-Plug 'tpope/vim-surround', { 'on': ['surround'] }
+Plug 'tpope/vim-surround', { 'on': ['Surround'] }
 
 " 自动匹配括号等
 Plug 'jiangmiao/auto-pairs'
