@@ -85,7 +85,7 @@ Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'iamcco/markdown-preview.vim' , { 'for': 'markdown' }
 
 " 添加包围符号，比如‘ “ [ 等
-Plug 'tpope/vim-surround'
+Plug 'tpope/vim-surround', { 'on': ['surround'] }
 
 " 自动匹配括号等
 Plug 'jiangmiao/auto-pairs'
@@ -112,9 +112,12 @@ Plug 'mongiaK/mark.vim'
 " 语法高亮
 "Plug 'jackguo380/vim-lsp-cxx-highlight'
 Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'charlespascoe/vim-go-syntax'
-Plug 'yuezk/vim-js'
-Plug 'maxmellon/vim-jsx-pretty'
+Plug 'charlespascoe/vim-go-syntax', { 'for': 'go' }
+Plug 'yuezk/vim-js', { 'for': [ 'javascript', 'typescript', 'css' ] }
+Plug 'maxmellon/vim-jsx-pretty', { 'for': [ 'javascript', 'typescript', 'css' ] }
+
+"  浮动终端
+Plug 'voldikss/vim-floaterm'
 
 " 代码片段
 Plug 'honza/vim-snippets'
@@ -193,7 +196,7 @@ set tabstop=4
 set cindent
 " 设置鼠标可以在普通模式跟可视模式使用
 set mouse=nv
-" 设置tag索引文件查询目录，当使用gentags时可以去掉该选项
+" 设置tag索引文件查询目录，当使用gutentags时可以去掉该选项
 " set tags=tags,../tags,../../tagsset
 " 设置path路径，方便查询系统函数及库函数
 set path=.,/usr/include,/usr/local/include,/usr/include/c++/4.4.7,/usr/include/c++/4.4.4
