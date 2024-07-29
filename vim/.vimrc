@@ -582,7 +582,6 @@ function Coc()
     \ 'coc-json',
     \ 'coc-vimlsp',
     \ 'coc-clangd',
-    \ 'coc-go',
     \ 'coc-rust-analyzer',
     \ 'coc-pyright',
     \ 'coc-snippets',
