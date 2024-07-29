@@ -90,14 +90,14 @@ function _M.config()
 				require("telescope.builtin").find_files()
 			end,
 		}),
-		--		button("space f n", " File new", leader, nil, {
-		--			noremap = true,
-		--			silent = true,
-		--			nowait = true,
-		--			callback = function()
-		--				vim.api.nvim_command("enew")
-		--			end,
-		--		}),
+		button("space f n", " File new", leader, nil, {
+			noremap = true,
+			silent = true,
+			nowait = true,
+			callback = function()
+				vim.api.nvim_command("enew")
+			end,
+		}),
 		button("space f w", " Word find", leader, nil, {
 			noremap = true,
 			silent = true,
