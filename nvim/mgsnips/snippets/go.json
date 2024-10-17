@@ -1,0 +1,13 @@
+{
+    "memdb_field": {
+        "prefix": "#memdbField",
+        "body": [
+            "\"$1\": {",
+            "\tName: \"$1\",",
+            ""
+            "#include <getopt.h>",
+            "#include <string.h>",
+            "#include <limits.h>"
+        ]
+    },
+}

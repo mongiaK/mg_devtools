@@ -87,5 +87,26 @@
             "\t}",
             "}"
         ]
+    },
+    "#ifndef": {
+        "prefix": "#ifndef",
+        "body": [
+            "#ifndef ${1}",
+            "#define ${1}",
+            "",
+            "#endif // !${1}"
+        ]
+    },
+    "classv": {
+        "prefix": "classv",
+        "body": [
+            "class ${1:ClassV} {",
+            "public:",
+            "\t${1:ClassV}();",
+            "\tvirtual ~${1:ClassV}();",
+            "",
+            "\t${2}",
+            "};"
+        ]
     }
 }

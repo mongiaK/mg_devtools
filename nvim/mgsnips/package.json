@@ -13,7 +13,14 @@
                     "cpp"
                 ],
                 "path": "./snippets/cpp.json"
+            },
+            {
+                "language": [
+                    "go"
+                ],
+                "path": "./snippets/go.json"
             }
+
         ]
     }
 }

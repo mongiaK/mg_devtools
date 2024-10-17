@@ -3,6 +3,7 @@ local _M = {}
 function _M.keys()
 	return {
 		{ "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Neotree Toggle" },
+		{ "<leader>p", "<cmd>Neotree toggle reveal_force_cwd<cr>", desc = "Neotree Toggle(cur dir)" },
 	}
 end
 

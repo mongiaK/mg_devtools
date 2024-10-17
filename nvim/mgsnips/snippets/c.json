@@ -87,5 +87,14 @@
             "\t}",
             "}"
         ]
+    },
+    "#ifndef": {
+        "prefix": "#ifndef",
+        "body": [
+            "#ifndef ${1}",
+            "#define ${1}",
+            "",
+            "#endif // !${1}"
+        ]
     }
 }

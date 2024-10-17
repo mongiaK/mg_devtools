@@ -58,6 +58,8 @@ function _M.config()
 			lspconfig[server_name].setup({})
 		end,
 		["clangd"] = function()
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			capabilities.offsetEncoding = { "utf-16" }
 			lspconfig.clangd.setup({
 				cmd = {
 					"clangd",
@@ -71,6 +73,7 @@ function _M.config()
 					"--header-insertion-decorators",
 					"--header-insertion=iwyu",
 				},
+				capabilities = capabilities,
 			})
 		end,
 	})

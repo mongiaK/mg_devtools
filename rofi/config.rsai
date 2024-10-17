@@ -1,0 +1,17 @@
+configuration{
+    modi: "run,drun,window";
+    icon-theme: "Oranchelo";  // 图标主题
+    show-icons: true;  // 显示图标
+    terminal: "alacritty";   // 终端，改成自己常用终端
+    drun-display-format: "{icon} {name}";
+    location: 0;  // 位置（0=中心，1=左上角，2=右上角，3=左下角，4=右下角）
+    disable-history: false;   // 显示历史记录
+    hide-scrollbar: true;  // 隐藏滚动条
+    display-drun: "   Apps ";
+    display-run: "   Run ";
+    display-window: " 󰕰  Window";
+    display-Network: " 󰤨  Network";
+    sidebar-mode: true;  // 侧边栏模式
+}
+
+@theme "~/.config/rofi/themes/catppuccin-mocha.rasi"
