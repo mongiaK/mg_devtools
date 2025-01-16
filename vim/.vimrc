@@ -1,12 +1,12 @@
-let g:vimuser = "mongia"
-let g:useremail = "mongiaK@outlook.com"
+let g:vimuser = 'mongia'
+let g:useremail = 'mongiaK@outlook.com'
 let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project', '.vscode', 'node_modules']
-" let $HTTP_PROXY =
-" let $HTTPS_PROXY = 
+# let $HTTP_PROXY =
+# let $HTTPS_PROXY = 
 
 function CheckPlugVim()
-    let $plugdir = expand("$HOME/.vim/autoload")
-    if empty(glob(expand("$plugdir/plug.vim")))
+    let $plugdir = expand('$HOME/.vim/autoload')
+    if empty(glob(expand('$plugdir/plug.vim')))
         silent !curl -fLo $plugdir/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
         autocmd VimEnter * PlugInstall --sync | source ~/.vimrc
     endif
@@ -128,23 +128,32 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 syntax on
-set t_Co=256 "设置终端为256色，但是不能满足一些gui的颜色"
+if $TERM =~# 'truecolor'
+  set t_Co=24
+elseif $TERM =~# '256color'
+  set t_Co=256
+elseif $TERM =~# 'color'
+  set t_Co=8
+else
+  set t_Co=8
+endif
+
 
 colorscheme molokai
 " colorscheme catppuccin_mocha
 
-if has("termguicolors") "开启终端gui真彩色
+if has('termguicolors') "开启终端gui真彩色
     " enable true color
-    set termguicolors
+    set termguicolors  " 如果设置了真彩色，那么t_Co的值不再是主要的闲置因素
 endif
 
 " 设置文件读的格式,终端格式等等
-set fencs=utf-8,gbk
+set fileencodings=utf-8,gbk
 set termencoding=utf-8
 set fileencoding=utf-8
 set encoding=utf-8
 " 关闭兼容模式
-set nocompatible
+" set nocompatible
 " 你输入查找内容的同时，vim就开始对你输入的内容进行匹配，并显示匹配的位置。打开这个选项，你可以即时看到查找的结果。
 set incsearch
 " 选项表示在查找时忽略大小写
@@ -154,7 +163,7 @@ set wildmenu
 " 当检测到一个文件已经在Vim之外被更改，并且它没有在Vim的内部被更改时，自动读取它
 set autoread
 " 设置光标不要闪烁
-set gcr=a:block-blinkon0
+set guicursor=a:block-blinkon0
 " 将状态行显示在窗口底部倒数第二行
 set laststatus=2
 " 底部的行号等显示
@@ -210,7 +219,7 @@ let g:which_key_map = {}
 
 function Airline()
     let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
-    let g:airline_theme="dark"      " 设置主题
+    let g:airline_theme='dark'     " 设置主题
 
     " 开启tabline
     let g:airline#extensions#tabline#enabled = 1      "tabline中当前buffer两端的分隔字符
@@ -221,7 +230,7 @@ endfunction
 
 function VimGo()
     let g:go_template_autocreate = 0
-    let g:go_template_file = ""
+    let g:go_template_file = ''
 endfunction
 call VimGo()
 
@@ -737,7 +746,7 @@ function WhichKey()
                 \}
     let g:which_key_map.a = {
                 \'name': 'ale',
-                \'p': "ale previous wrap",
+                \'p': 'ale previous wrap',
                 \'n': 'ale next wrap',
                 \'d': 'ale detail',
                 \'i': 'ale info'

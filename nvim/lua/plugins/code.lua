@@ -9,6 +9,7 @@ return {
 			"rcarriga/nvim-notify",
 			"neovim/nvim-lspconfig",
 		},
+		config = require("plugins_config.go").config,
 	},
 	-- 自动生成tag文件
 	{

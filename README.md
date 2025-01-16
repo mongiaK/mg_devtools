@@ -18,11 +18,11 @@
 
 2. vim-plug 安装插件失败（github 访问错误）
 
-   - 打开~/.vim/autoload/plug.vim 文件，将文件里面的github.com的地址全部改为hub.fastgit.org。注释的可以不用管，不要用命令行直接替换，因为有些地方有转移字符
+   - 打开~/.vim/autoload/plug.vim 文件，从网上找一下github的替代地址，一般安装浏览器插件有推荐的
 
 3. zsh 安装失败
 
-   - 使用下面的命令安装 【git clone https://hub.fastgit.org/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh 】
+   - 一般就是github访问异常，建议科学使用上网
 
 4. mac电脑安装brew包管理器失败
    - 【/usr/bin/ruby -e "$(curl -fsSL https://cdn.jsdelivr.net/gh/ineo6/homebrew-install/install)" 】（参考链接 [国内安装brew正确姿势](https://cloud.tencent.com/developer/article/1853162)）
