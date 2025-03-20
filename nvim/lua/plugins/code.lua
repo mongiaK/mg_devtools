@@ -62,6 +62,7 @@ return {
 	-- git 插件
 	{
 		"kdheepak/lazygit.nvim",
+		enable = true,
 		cmd = {
 			"LazyGit",
 			"LazyGitConfig",
@@ -74,4 +75,8 @@ return {
 		},
 		keys = require("plugins_config.lazygit").keys(),
 	},
+	--	{
+	--		"terrortylor/nvim-comment",
+	--		config = require("plugins_config.comment").config,
+	--	},
 }

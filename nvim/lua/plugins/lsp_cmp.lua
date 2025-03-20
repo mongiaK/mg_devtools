@@ -11,7 +11,7 @@ return {
 	},
 	-- 格式化代码
 	{
-		"jose-elias-alvarez/null-ls.nvim",
+		"nvimtools/none-ls.nvim",
 		lazy = "veryLazy",
 		event = { "CursorHold", "CursorHoldI" },
 		config = require("plugins_config.null-ls").config,

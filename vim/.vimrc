@@ -1,8 +1,8 @@
 let g:vimuser = 'mongia'
 let g:useremail = 'mongiaK@outlook.com'
 let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project', '.vscode', 'node_modules']
-# let $HTTP_PROXY =
-# let $HTTPS_PROXY = 
+" let $HTTP_PROXY =
+" let $HTTPS_PROXY = 
 
 function CheckPlugVim()
     let $plugdir = expand('$HOME/.vim/autoload')
