@@ -9,7 +9,7 @@ local function attach_ls(client, bufnr)
 			buffer = bufnr,
 			callback = function()
 				-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-				vim.lsp.buf.format()
+				vim.lsp.buf.format({})
 				--vim.lsp.buf.format({ bufnr = bufnr })
 			end,
 		})
@@ -45,13 +45,17 @@ function _M.config()
 				"sh",
 				"markdown",
 			},
+			--env = {
+			--	PRETTIERD_DEFAULT_CONFIG = vim.fn.expand("~/.config/nvim/.prettierrc.json"),
+			--},
+			extra_args = { "--tab-width", "4", "--use-tabs", "false" }, -- 强制 4 空格
 		}),
 	}
 
 	null_ls.setup({
 		border = "rounded",
-		debug = false,
-		log_level = "warn",
+		debug = true,
+		log_level = "trace",
 		update_in_insert = false,
 		sources = sources,
 		on_attach = attach_ls,
@@ -64,7 +68,6 @@ function _M.config()
 			"editorconfig_checker",
 			"prettier",
 			"rustfmt",
-			"shfmt",
 			"stylua",
 			"vint",
 		},
