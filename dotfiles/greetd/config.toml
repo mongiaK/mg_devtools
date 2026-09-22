@@ -1,0 +1,6 @@
+[terminal]
+vt = 1
+
+[default_session]
+command = "tuigreet --time --time-format '🕐 %H:%M  📅 %m月%d日 %a' --greeting '🌸 欢迎回来 ✨' --asterisks --asterisks-char '●' --remember --remember-session --user-menu --greet-align center --width 64 --window-padding 2 --container-padding 2 --prompt-padding 1 --power-shutdown 'systemctl poweroff' --power-reboot 'systemctl reboot' --theme 'border=magenta;text=white;prompt=green;time=yellow;action=cyan;button=lightmagenta;container=black;input=lightcyan;title=lightmagenta;greet=lightblue' --cmd Hyprland"
+user = "greeter"

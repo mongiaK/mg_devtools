@@ -3,24 +3,21 @@
     "contributes": {
         "snippets": [
             {
-                "language": [
-                    "c"
-                ],
+                "language": "c",
                 "path": "./snippets/c.json"
             },
             {
-                "language": [
-                    "cpp"
-                ],
+                "language": "cpp",
                 "path": "./snippets/cpp.json"
             },
             {
-                "language": [
-                    "go"
-                ],
+                "language": "go",
                 "path": "./snippets/go.json"
+            },
+            {
+                "language": "sh",
+                "path": "./snippets/sh.json"
             }
-
         ]
     }
 }

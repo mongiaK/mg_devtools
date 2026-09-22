@@ -108,5 +108,25 @@
             "\t${2}",
             "};"
         ]
+    },
+    "arrinput": {
+        "prefix": "arrinput",
+        "body": [
+            "string ${1:arrinput};",
+            "getline(cin, ${1:arrinput});",
+            "stringstream ss(${1:arrinput});",
+            "int num;",
+            "vector<int> arr;",
+            "while(ss >> num) {",
+            "\tarr.push_back(num);",
+            "}"
+        ]
+    },
+    "intinput": {
+        "prefix": "intinput",
+        "body": [
+            "int ${1:input_int};",
+            "cin << ${1:input_int};"
+        ]
     }
 }

@@ -1,0 +1,120 @@
+pkg=(
+	# session / compositor
+	hyprland
+	xorg-xwayland
+	wayland-utils
+	xdg-desktop-portal-hyprland
+	xdg-desktop-portal-gtk
+	xdg-user-dirs
+	xdg-user-dirs-gtk
+	xdg-utils
+
+	# login (bare tuigreet — no cage/foot wrapper)
+	greetd
+	greetd-tuigreet
+
+	# bar / launcher / global search / notifications / wallpaper
+	waybar
+	wofi
+	walker
+	mako
+	libnotify
+	hyprpaper
+
+	# lock / idle / polkit / color picker (Hyprland ecosystem)
+	hyprlock
+	hypridle
+	hyprpolkitagent
+	hyprpicker
+
+	# terminals / tools
+	kitty
+	foot
+	btop
+	lm_sensors
+
+	# browser / media / docs (Wayland-friendly)
+	firefox
+	mpv
+	imv
+	zathura
+	zathura-pdf-mupdf
+
+	# file manager + archives + thumbnails
+	thunar
+	thunar-volman
+	thunar-archive-plugin
+	tumbler
+	ffmpegthumbnailer
+	gvfs
+	gvfs-smb
+	gvfs-mtp
+	file-roller
+	p7zip
+	unzip
+	zip
+	udisks2
+
+	# audio
+	pipewire
+	pipewire-pulse
+	wireplumber
+	pavucontrol
+	playerctl
+
+	# bluetooth
+	bluez
+	bluez-utils
+	blueman
+
+	# network
+	networkmanager
+	network-manager-applet
+
+	# clipboard
+	wl-clipboard
+	cliphist
+
+	# screenshots / annotation / screen record / picker
+	grim
+	slurp
+	satty
+	wf-recorder
+
+	# brightness / media
+	brightnessctl
+
+	# qt5 / qt6 wayland + theme bridge
+	qt5ct
+	qt6ct
+	qt5-wayland
+	qt6-wayland
+
+	# input method (Chinese)
+	fcitx5
+	fcitx5-chinese-addons
+	fcitx5-gtk
+	fcitx5-qt
+	fcitx5-configtool
+
+	# secrets
+	gnome-keyring
+
+	# gtk settings GUI
+	nwg-look
+
+	# fonts
+	noto-fonts
+	noto-fonts-cjk
+	noto-fonts-emoji
+	ttf-jetbrains-mono-nerd
+
+	# icons / cursors / gtk theme
+	papirus-icon-theme
+	adwaita-cursors
+	adw-gtk-theme
+)
+
+aur=(
+	clash-verge-rev-bin
+)

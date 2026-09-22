@@ -34,9 +34,13 @@ function _M.config()
 		delete_check_events = "TextChanged",
 	})
 
+	-- 先加载自定义snippets（立即加载）
+	require("luasnip.loaders.from_vscode").load({
+		paths = vim.fn.stdpath("config") .. "/mgsnips"
+	})
+	
+	-- 然后延迟加载默认snippets
 	require("luasnip.loaders.from_vscode").lazy_load()
-	require("luasnip.loaders.from_vscode").load({ paths = "~/.config/nvim/mgsnips" })
-	--	require("luasnip.loaders.from_snipmate").lazy_load()
 end
 
 return _M

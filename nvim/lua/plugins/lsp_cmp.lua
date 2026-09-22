@@ -28,9 +28,11 @@ return {
 		dependencies = {
 			"rafamadriz/friendly-snippets",
 			"saadparwaiz1/cmp_luasnip",
+			"benfowler/telescope-luasnip.nvim",
 		},
 		keys = require("plugins_config.luasnip").keys(),
 		config = require("plugins_config.luasnip").config,
+		build = "make install_jsregexp",
 	},
 
 	-- 自动补全插件

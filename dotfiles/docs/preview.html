@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hyprland Dotfiles — 效果预览</title>
+<style>
+  :root {
+    --rosewater: #f5e0dc; --flamingo: #f2cdcd; --pink: #f5c2e7;
+    --mauve: #cba6f7; --red: #f38ba8; --maroon: #eba0ac;
+    --peach: #fab387; --yellow: #f9e2af; --green: #a6e3a1;
+    --teal: #94e2d5; --sky: #89dceb; --sapphire: #74c7ec;
+    --blue: #89b4fa; --lavender: #b4befe;
+    --text: #cdd6f4; --subtext1: #bac2de; --subtext0: #a6adc8;
+    --overlay2: #9399b2; --overlay1: #7f849c; --overlay0: #6c7086;
+    --surface2: #585b70; --surface1: #45475a; --surface0: #313244;
+    --base: #1e1e2e; --mantle: #181825; --crust: #11111b;
+    --glass: color-mix(in srgb, var(--base) 72%, transparent);
+    --glass-line: color-mix(in srgb, var(--surface1) 85%, transparent);
+    --shadow: 0 24px 48px rgba(0,0,0,.35), 0 8px 16px rgba(0,0,0,.22);
+    --font-ui: "SF Pro Text", "Segoe UI", "Noto Sans SC", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+    --wall-a: #1a1b26;
+    --wall-b: #2a2d4a;
+    --wall-c: #1e3a2f;
+  }
+
+  html.latte {
+    --rosewater: #dc8a78; --flamingo: #dd7878; --pink: #ea76cb;
+    --mauve: #8839ef; --red: #d20f39; --maroon: #e64553;
+    --peach: #fe640b; --yellow: #df8e1d; --green: #40a02b;
+    --teal: #179299; --sky: #04a5e5; --sapphire: #209fb5;
+    --blue: #1e66f5; --lavender: #7287fd;
+    --text: #4c4f69; --subtext1: #5c5f77; --subtext0: #6c6f85;
+    --overlay2: #7c7f93; --overlay1: #8c8fa1; --overlay0: #9ca0b0;
+    --surface2: #acb0be; --surface1: #bcc0cc; --surface0: #ccd0da;
+    --base: #eff1f5; --mantle: #e6e9ef; --crust: #dce0e8;
+    --wall-a: #e8eaf2;
+    --wall-b: #d4dbe8;
+    --wall-c: #c8ddd4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    font-family: var(--font-ui);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, color-mix(in srgb, var(--mauve) 18%, transparent), transparent 60%),
+      radial-gradient(900px 500px at 110% 20%, color-mix(in srgb, var(--blue) 14%, transparent), transparent 55%),
+      linear-gradient(160deg, #0c0c14 0%, #12121c 50%, #0a0a10 100%);
+    color: #e8eaf6;
+    padding: 28px 20px 64px;
+  }
+
+  html.latte body {
+    background:
+      radial-gradient(1200px 600px at 10% -10%, color-mix(in srgb, var(--mauve) 12%, transparent), transparent 60%),
+      radial-gradient(900px 500px at 110% 20%, color-mix(in srgb, var(--blue) 10%, transparent), transparent 55%),
+      linear-gradient(160deg, #1a1c28 0%, #22243a 50%, #161822 100%);
+  }
+
+  .wrap { max-width: 1100px; margin: 0 auto; }
+
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--mauve);
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    color: #f2f3fb;
+  }
+
+  html.latte h1 { color: #f2f3fb; }
+
+  .sub {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #9aa0b8;
+    max-width: 42em;
+    line-height: 1.5;
+  }
+
+  .theme-switch {
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    backdrop-filter: blur(12px);
+  }
+
+  .theme-switch button {
+    border: 0;
+    cursor: pointer;
+    font: 600 12px/1 var(--font-ui);
+    padding: 9px 14px;
+    border-radius: 999px;
+    color: #b8bdd4;
+    background: transparent;
+    transition: .15s ease;
+  }
+
+  .theme-switch button[aria-pressed="true"] {
+    background: var(--mauve);
+    color: var(--base);
+  }
+
+  .theme-switch button:focus-visible,
+  .keycard:focus-visible,
+  .screen:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+
+  /* —— Desktop stage —— */
+  .stage-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin: 0 0 10px;
+  }
+
+  .stage-label h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #c5cae0;
+    letter-spacing: .02em;
+  }
+
+  .stage-label span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #7d849e;
+  }
+
+  .screen {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 30px 60px rgba(0,0,0,.45);
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 80%, var(--wall-c), transparent 55%),
+      radial-gradient(ellipse 70% 50% at 20% 30%, color-mix(in srgb, var(--mauve) 35%, var(--wall-b)), transparent 50%),
+      linear-gradient(145deg, var(--wall-a), var(--wall-b) 55%, var(--wall-a));
+    isolation: isolate;
+  }
+
+  .screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: .04;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  /* fake windows under overlays */
+  .desk-window {
+    position: absolute;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--crust) 88%, transparent);
+    border: 1px solid color-mix(in srgb, var(--surface1) 70%, transparent);
+    box-shadow: 0 12px 32px rgba(0,0,0,.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .desk-window .titlebar {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    background: color-mix(in srgb, var(--mantle) 90%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--surface0) 80%, transparent);
+  }
+
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .dot.r { background: var(--red); }
+  .dot.y { background: var(--yellow); }
+  .dot.g { background: var(--green); }
+
+  .desk-window .body {
+    flex: 1;
+    padding: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--subtext1);
+    background: color-mix(in srgb, var(--base) 92%, transparent);
+  }
+
+  .desk-window .body .cm { color: var(--overlay0); }
+  .desk-window .body .kw { color: var(--mauve); }
+  .desk-window .body .st { color: var(--green); }
+  .desk-window .body .fn { color: var(--blue); }
+
+  .win-a { left: 6%; top: 14%; width: 42%; height: 58%; }
+  .win-b { right: 8%; top: 22%; width: 36%; height: 48%; }
+
+  /* —— Waybar —— */
+  .waybar {
+    position: absolute;
+    top: 8px; left: 10px; right: 10px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .wb-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .chip {
+    pointer-events: auto;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--glass);
+    outline: 1px solid color-mix(in srgb, var(--surface0) 55%, transparent);
+    outline-offset: -1px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    font: 600 12px/1 var(--font-ui);
+    color: var(--text);
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    user-select: none;
+    cursor: default;
+  }
+
+  .chip:hover { background: color-mix(in srgb, var(--surface0) 70%, transparent); }
+
+  .chip svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .chip.tray svg { width: 13px; height: 13px; }
+
+  .chip.theme { color: var(--peach); margin-left: 5px; padding: 0 12px; }
+  html.mocha .chip.theme { color: var(--sapphire); }
+  html.latte .chip.theme { color: var(--peach); }
+
+  /* waybar tooltip — mirrors style.css tooltip { } */
+  .chip[data-tip] {
+    position: relative;
+  }
+
+  .chip[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    white-space: pre;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.55;
+    letter-spacing: 0;
+    color: var(--text);
+    background: color-mix(in srgb, var(--crust) 88%, transparent);
+    border: 1px solid color-mix(in srgb, var(--surface1) 70%, transparent);
+    border-radius: 12px;
+    padding: 10px 14px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.28);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .12s ease, transform .12s ease, visibility .12s;
+    z-index: 30;
+    min-width: max-content;
+    max-width: 280px;
+  }
+
+  .chip[data-tip]::before {
+    content: "";
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    transform: translateX(-50%) rotate(45deg);
+    background: color-mix(in srgb, var(--crust) 88%, transparent);
+    border-right: 1px solid color-mix(in srgb, var(--surface1) 70%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--surface1) 70%, transparent);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .12s ease, visibility .12s;
+    z-index: 31;
+  }
+
+  .chip[data-tip]:hover::after,
+  .chip[data-tip]:focus-visible::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .chip[data-tip]:hover::before,
+  .chip[data-tip]:focus-visible::before {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .wb-group .chip[data-tip]:last-child::after,
+  .wb-group .chip[data-tip]:last-child::before {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+
+  .wb-group .chip[data-tip]:last-child:hover::after {
+    transform: translateY(0);
+  }
+
+  .wb-group:first-child .chip[data-tip]:first-child::after,
+  .wb-group:first-child .chip[data-tip]:first-child::before {
+    left: 0;
+    transform: none;
+  }
+
+  .wb-group:first-child .chip[data-tip]:first-child:hover::after {
+    transform: translateY(0);
+  }
+
+  .ws { padding: 0 5px; margin-left: 5px; gap: 4px; }
+  .ws button {
+    border: 0;
+    width: 26px; height: 22px;
+    border-radius: 9px;
+    font: 700 11px/1 var(--font-mono);
+    color: var(--overlay1);
+    background: transparent;
+    cursor: default;
+    padding: 0;
+  }
+  .ws button.active {
+    width: 28px;
+    color: var(--base);
+    background: var(--mauve);
+  }
+
+  .chip.win {
+    color: var(--subtext1);
+    max-width: 280px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+  }
+
+  .chip.clock { padding: 0 16px; font-variant-numeric: tabular-nums; }
+
+  .chip.cpu { color: var(--blue); margin-left: 5px; }
+  .chip.mem { color: var(--teal); }
+  .chip.disk { color: var(--peach); }
+  .chip.net { color: var(--green); }
+  .chip.vol { color: var(--pink); }
+  .chip.bt { color: var(--sapphire); }
+  .chip.bat { color: var(--green); }
+  .chip.tray {
+    margin-right: 5px;
+    background: color-mix(in srgb, var(--mantle) 72%, transparent);
+    outline-color: color-mix(in srgb, var(--surface0) 70%, transparent);
+    padding: 0 9px;
+    gap: 7px;
+    color: var(--subtext0);
+    font-size: 13px;
+  }
+
+  /* —— Overlay scrims / launchers —— */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,.18);
+    backdrop-filter: blur(2px);
+  }
+
+  .overlay.open { display: flex; }
+
+  /* wofi */
+  .wofi {
+    width: min(420px, 70%);
+    height: min(280px, 62%);
+    display: flex;
+    flex-direction: column;
+    border-radius: 14px;
+    background: var(--glass);
+    border: 1px solid var(--glass-line);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    animation: pop .18s ease;
+  }
+
+  .wofi-input {
+    margin: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--surface0) 70%, transparent);
+    color: var(--text);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .wofi-input .caret {
+    width: 1.5px; height: 14px;
+    background: var(--mauve);
+    animation: blink 1s step-end infinite;
+  }
+
+  .wofi-list { padding: 0 12px 12px; overflow: auto; }
+
+  .wofi-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 13px;
+  }
+
+  .wofi-item.sel {
+    background: color-mix(in srgb, var(--mauve) 80%, transparent);
+    color: var(--base);
+  }
+
+  .icon-sq {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    display: grid; place-items: center;
+    font-size: 12px;
+    background: color-mix(in srgb, var(--blue) 30%, var(--surface0));
+    color: var(--text);
+    flex-shrink: 0;
+  }
+
+  .wofi-item.sel .icon-sq {
+    background: color-mix(in srgb, var(--base) 35%, white);
+    color: var(--base);
+  }
+
+  /* walker spotlight */
+  .walker {
+    width: min(560px, 82%);
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    background: var(--glass);
+    border: 1px solid var(--glass-line);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow);
+    padding: 14px;
+    animation: pop .18s ease;
+  }
+
+  .walker-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--surface0) 65%, transparent);
+    border: 1px solid color-mix(in srgb, var(--surface1) 50%, transparent);
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .walker-search .ph { color: var(--subtext0); opacity: .85; }
+  .walker-search .mag { color: var(--overlay1); font-size: 14px; }
+
+  .walker-list { margin-top: 10px; display: flex; flex-direction: column; gap: 2px; }
+
+  .walker-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--text);
+  }
+
+  .walker-item.sel { background: color-mix(in srgb, var(--blue) 28%, transparent); }
+
+  .walker-item .meta { min-width: 0; }
+  .walker-item .name { font-size: 13.5px; font-weight: 600; }
+  .walker-item .sub {
+    font-size: 11.5px;
+    color: var(--subtext0);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .walker-item.sel .sub { color: var(--subtext1); }
+
+  .walker-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: grid; place-items: center;
+    font-size: 15px;
+    background: color-mix(in srgb, var(--mauve) 22%, var(--surface0));
+    flex-shrink: 0;
+  }
+
+  .walker-item.sel .walker-icon {
+    background: color-mix(in srgb, var(--blue) 40%, var(--surface0));
+  }
+
+  .walker-foot {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid color-mix(in srgb, var(--surface1) 70%, transparent);
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--overlay1);
+    font-family: var(--font-mono);
+  }
+
+  .kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 4px;
+    border: 1px solid color-mix(in srgb, var(--overlay1) 60%, transparent);
+    margin: 0 2px;
+    font-size: 10px;
+  }
+
+  /* —— Key cards —— */
+  .keys {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .keycard {
+    text-align: left;
+    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255,255,255,.04);
+    color: inherit;
+    border-radius: 14px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: .15s ease;
+    font: inherit;
+  }
+
+  .keycard:hover {
+    background: rgba(255,255,255,.07);
+    border-color: color-mix(in srgb, var(--mauve) 50%, rgba(255,255,255,.1));
+    transform: translateY(-1px);
+  }
+
+  .keycard kbd {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--mauve);
+    background: color-mix(in srgb, var(--mauve) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--mauve) 35%, transparent);
+    border-radius: 6px;
+    padding: 3px 7px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .keycard strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 650;
+    color: #f0f2fa;
+    margin-bottom: 6px;
+  }
+
+  .keycard p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #9aa0b8;
+  }
+
+  footer {
+    margin-top: 28px;
+    font-size: 11.5px;
+    color: #6e7490;
+    line-height: 1.6;
+  }
+
+  footer code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--subtext0);
+  }
+
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(8px) scale(.98); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  @media (max-width: 720px) {
+    .chip.win, .chip.disk, .chip.tray { display: none; }
+    .win-b { display: none; }
+    .chip[data-tip]::after, .chip[data-tip]::before { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body class="mocha">
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Arch · Hyprland · Wayland</div>
+      <h1>Catppuccin 桌面效果预览</h1>
+      <p class="sub">
+        静态模拟：顶部 waybar 毛玻璃模块、居中 wofi、Spotlight 风格 Walker。
+        颜色取自 <code style="font-family:var(--font-mono);color:var(--mauve)">colors/mocha.css</code> /
+        <code style="font-family:var(--font-mono);color:var(--mauve)">latte.css</code>，非真机截图。
+      </p>
+    </div>
+    <div class="theme-switch" role="group" aria-label="主题">
+      <button type="button" id="btn-mocha" aria-pressed="true">☾ Mocha</button>
+      <button type="button" id="btn-latte" aria-pressed="false">☀ Latte</button>
+    </div>
+  </header>
+
+  <div class="stage-label">
+    <h2>桌面</h2>
+    <span id="stage-hint">悬停 waybar 图标看 tooltip · 点击下方卡片打开浮层 · Esc 关闭</span>
+  </div>
+
+  <div class="screen" id="screen" tabindex="0" aria-label="桌面预览">
+    <div class="desk-window win-a" aria-hidden="true">
+      <div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+      <div class="body">
+        <div><span class="kw">local</span> p = palettes[name]</div>
+        <div><span class="fn">hl.config</span>({</div>
+        <div>&nbsp;&nbsp;general = { col = { active_border = p.active } },</div>
+        <div>})</div>
+        <div class="cm">-- theme.lua · mocha ↔ latte</div>
+        <div><span class="st">hyprctl reload</span> <span class="cm">✓</span></div>
+      </div>
+    </div>
+    <div class="desk-window win-b" aria-hidden="true">
+      <div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+      <div class="body">
+        <div class="cm"># waybar · frosted glass 70%</div>
+        <div>background: <span class="st">alpha(@base, 0.7)</span></div>
+        <div>blur: <span class="st">layer · ignore_alpha=0.7</span></div>
+        <div class="cm"># walker · Super+Space</div>
+        <div>theme = <span class="st">"spotlight"</span></div>
+      </div>
+    </div>
+
+    <!-- Waybar — icons + tooltips match waybar/config.jsonc & scripts -->
+    <div class="waybar">
+      <div class="wb-group">
+        <button type="button" class="chip theme" id="wb-theme"
+          data-tip="当前：Mocha 深色&#10;点击切换 Latte 浅色"
+          aria-label="主题切换">
+          <svg class="ic-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 7 7 0 1 0 20 14.5Z" fill="currentColor"/>
+          </svg>
+        </button>
+
+        <div class="chip ws" data-tip="Workspace 1&#10;当前工作区" tabindex="0">
+          <button type="button" class="active" aria-current="true">1</button>
+          <button type="button">2</button>
+          <button type="button">3</button>
+          <button type="button">4</button>
+          <button type="button">5</button>
+        </div>
+
+        <span class="chip win" data-tip="当前窗口&#10;hyprland.lua — nvim" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M7 10h4M7 14h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          hyprland.lua — nvim
+        </span>
+      </div>
+
+      <div class="wb-group">
+        <span class="chip clock" tabindex="0"
+          data-tip="2026 September&#10;  一   二   三   四   五   六   日&#10;W38            1    2    3    4    5    6&#10;W39  7    8    9   10   11   12   13&#10;W40 14   15   16   17   18   19   20&#10;W41 21  [22]  23   24   25   26   27&#10;W42 28   29   30">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          14:32
+        </span>
+      </div>
+
+      <div class="wb-group">
+        <span class="chip cpu" tabindex="0"
+          data-tip="CPU&#10;· 使用率：12%&#10;· 温度：48°C&#10;· Load：0.42 0.51 0.48">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="7" y="7" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1.7"/>
+            <path d="M9.5 3.5v3M14.5 3.5v3M9.5 17.5v3M14.5 17.5v3M3.5 9.5h3M3.5 14.5h3M17.5 9.5h3M17.5 14.5h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <rect x="10" y="10" width="4" height="4" rx="0.5" fill="currentColor"/>
+          </svg>
+          12%
+        </span>
+
+        <span class="chip mem" tabindex="0"
+          data-tip="Memory&#10;· 使用率：38%&#10;· 已使用：6.2 GiB&#10;· 总计：16.0 GiB&#10;· 可用：9.8 GiB&#10;· Swap：0.0 / 8.0 GiB（0%）">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="8" width="18" height="8" rx="1.5" stroke="currentColor" stroke-width="1.7"/>
+            <path d="M7 16v2M11 16v2M15 16v2M19 16v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M6.5 11h2M11 11h2M15.5 11h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          38%
+        </span>
+
+        <span class="chip disk" tabindex="0"
+          data-tip="Disk&#10;· 使用率：41%&#10;· 已使用：187G&#10;· 总容量：456G&#10;· 剩余：269G">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3.5" y="6" width="17" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/>
+            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="12" cy="12" r="0.9" fill="currentColor"/>
+          </svg>
+          41%
+        </span>
+
+        <span class="chip net" tabindex="0"
+          data-tip="Wi-Fi&#10;· SSID：Home-5G&#10;· 信号：78%&#10;· IP：192.168.1.23&#10;· 接口：wlan0&#10;· 下载：1.2 MiB/s&#10;· 上传：256 KiB/s">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4.5 9.5a11 11 0 0 1 15 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M7.5 13a7 7 0 0 1 9 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M10.2 16.4a3 3 0 0 1 3.6 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="12" cy="19.2" r="1.2" fill="currentColor"/>
+          </svg>
+          Home-5G
+        </span>
+
+        <span class="chip vol" tabindex="0"
+          data-tip="Audio&#10;· 音量：45%&#10;· 输出：Built-in Audio Analog Stereo">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 10v4h3.5L12 18V6L7.5 10H4Z" fill="currentColor"/>
+            <path d="M15.5 9.5a4 4 0 0 1 0 5M17.8 7.2a7 7 0 0 1 0 9.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+          45%
+        </span>
+
+        <span class="chip bt" tabindex="0"
+          data-tip="Bluetooth&#10;已连接&#10;1 个设备">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 7.5 17 16.5 12 21V3l5 4.5L7 16.5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+          1
+        </span>
+
+        <span class="chip bat" tabindex="0"
+          data-tip="Battery&#10;· 电量：86%&#10;· 状态：Discharging&#10;· 电压：12.4 V&#10;· 功率：12.5 W">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="8" width="16" height="9" rx="2" stroke="currentColor" stroke-width="1.7"/>
+            <path d="M20.5 11v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <rect x="5" y="10" width="11.5" height="5" rx="1" fill="currentColor"/>
+          </svg>
+          86%
+        </span>
+
+        <span class="chip tray" tabindex="0" data-tip="系统托盘&#10;蓝牙 · 音量 · Clash">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 7.5 17 16.5 12 21V3l5 4.5L7 16.5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 10v4h3.5L12 18V6L7.5 10H4Z" fill="currentColor"/>
+            <path d="M15.5 10.5a3 3 0 0 1 0 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/>
+            <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- Super+R → wofi -->
+    <div class="overlay" id="ov-wofi" role="dialog" aria-label="wofi 启动器预览">
+      <div class="wofi">
+        <div class="wofi-input">
+          <span>搜索…</span><span class="caret"></span>
+        </div>
+        <div class="wofi-list">
+          <div class="wofi-item sel"><span class="icon-sq">⌘</span> Kitty</div>
+          <div class="wofi-item"><span class="icon-sq">📁</span> Thunar</div>
+          <div class="wofi-item"><span class="icon-sq">⚙</span> Firefox</div>
+          <div class="wofi-item"><span class="icon-sq">◉</span> Pavucontrol</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Super+Space → walker -->
+    <div class="overlay" id="ov-walker" role="dialog" aria-label="Walker 聚焦搜索预览">
+      <div class="walker">
+        <div class="walker-search">
+          <span class="mag">⌕</span>
+          <span class="ph" id="walker-q">Spotlight Search</span>
+        </div>
+        <div class="walker-list">
+          <div class="walker-item sel">
+            <span class="walker-icon">⌘</span>
+            <div class="meta">
+              <div class="name">Terminal</div>
+              <div class="sub">kitty — 应用</div>
+            </div>
+          </div>
+          <div class="walker-item">
+            <span class="walker-icon">📄</span>
+            <div class="meta">
+              <div class="name">theme-toggle.sh</div>
+              <div class="sub">~/.config/scripts — 文件</div>
+            </div>
+          </div>
+          <div class="walker-item">
+            <span class="walker-icon">=</span>
+            <div class="meta">
+              <div class="name">1024 + 256 = 1280</div>
+              <div class="sub">计算</div>
+            </div>
+          </div>
+          <div class="walker-item">
+            <span class="walker-icon">⧉</span>
+            <div class="meta">
+              <div class="name">hl.bind(mainMod .. " + space", …)</div>
+              <div class="sub">剪贴板</div>
+            </div>
+          </div>
+        </div>
+        <div class="walker-foot">
+          <span><span class="kbd">↵</span> 打开 <span class="kbd">esc</span> 关闭</span>
+          <span>/ 文件 · = 计算 · : 剪贴板 · &gt; 命令</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="keys">
+    <button type="button" class="keycard" data-open="ov-wofi">
+      <kbd>Super + R</kbd>
+      <strong>wofi 应用启动器</strong>
+      <p>居中半透明列表，mauve 高亮选中项，与 waybar 同一套 Catppuccin 色板。</p>
+    </button>
+    <button type="button" class="keycard" data-open="ov-walker">
+      <kbd>Super + Space</kbd>
+      <strong>Walker 聚焦搜索</strong>
+      <p>mac Spotlight 式毛玻璃浮层：应用、文件、计算、剪贴板前缀搜索。</p>
+    </button>
+    <button type="button" class="keycard" id="card-theme">
+      <kbd>Super + M</kbd>
+      <strong>mocha ↔ latte</strong>
+      <p>与 waybar 太阳/月亮同步：状态文件、调色板软链、GTK、foot、Qt 色板一起翻转。</p>
+    </button>
+  </div>
+
+  <footer>
+    预览文件：<code>dotfiles/docs/preview.html</code>（浏览器直接打开）。
+    真机效果需在 Arch + Hyprland 上部署后截图；毛玻璃依赖 Hyprland layer blur，
+    浏览器里用 <code>backdrop-filter</code> 近似。
+  </footer>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const btnMocha = document.getElementById("btn-mocha");
+  const btnLatte = document.getElementById("btn-latte");
+  const themeChip = document.getElementById("wb-theme");
+  const stageHint = document.getElementById("stage-hint");
+  const overlays = { ov: null };
+
+  function themeTip(isMocha) {
+    return isMocha
+      ? "当前：Mocha 深色\n点击切换 Latte 浅色"
+      : "当前：Latte 浅色\n点击切换 Mocha 深色";
+  }
+
+  function themeIconSvg(isMocha) {
+    return isMocha
+      ? `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 7 7 0 1 0 20 14.5Z" fill="currentColor"/></svg>`
+      : `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+  }
+
+  function setTheme(mode) {
+    root.classList.remove("mocha", "latte");
+    root.classList.add(mode);
+    document.body.className = mode;
+    const isMocha = mode === "mocha";
+    btnMocha.setAttribute("aria-pressed", String(isMocha));
+    btnLatte.setAttribute("aria-pressed", String(!isMocha));
+    themeChip.innerHTML = themeIconSvg(isMocha);
+    themeChip.setAttribute("data-tip", themeTip(isMocha));
+    if (stageHint) {
+      stageHint.textContent = isMocha
+        ? "Mocha · 悬停 waybar 图标看 tooltip · 点击卡片打开浮层"
+        : "Latte · 悬停 waybar 图标看 tooltip · 点击卡片打开浮层";
+    }
+  }
+
+  btnMocha.addEventListener("click", () => setTheme("mocha"));
+  btnLatte.addEventListener("click", () => setTheme("latte"));
+  themeChip.style.cursor = "pointer";
+  themeChip.addEventListener("click", () => {
+    setTheme(root.classList.contains("mocha") ? "latte" : "mocha");
+  });
+  document.getElementById("card-theme").addEventListener("click", () => {
+    setTheme(root.classList.contains("mocha") ? "latte" : "mocha");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  function closeAll() {
+    document.querySelectorAll(".overlay.open").forEach((el) => el.classList.remove("open"));
+    overlays.ov = null;
+  }
+
+  function openOverlay(id) {
+    closeAll();
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add("open");
+    overlays.ov = id;
+    const q = document.getElementById("walker-q");
+    if (id === "ov-walker") {
+      q.textContent = "term";
+      q.classList.remove("ph");
+      q.style.color = "var(--text)";
+    } else {
+      q.textContent = "Spotlight Search";
+      q.classList.add("ph");
+      q.style.color = "";
+    }
+  }
+
+  document.querySelectorAll(".keycard[data-open]").forEach((btn) => {
+    btn.addEventListener("click", () => openOverlay(btn.dataset.open));
+  });
+
+  document.querySelectorAll(".overlay").forEach((ov) => {
+    ov.addEventListener("click", (e) => {
+      if (e.target === ov) closeAll();
+    });
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeAll();
+  });
+
+  setTheme("mocha");
+</script>
+</body>
+</html>

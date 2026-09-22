@@ -12,9 +12,16 @@ return {
 		config = require("plugins_config.go").config,
 	},
 	-- 自动生成tag文件
+	-- 关键:不要 eager load。只在真正读到磁盘上的文件时再启动,
+	-- 并且通过 plugins_config.gutentags 里的熔断/黑名单/.notags 哨兵控制范围
 	{
 		"ludovicchabant/vim-gutentags",
-		enable = true,
+		event = { "BufReadPost" },
+		cmd = { "GutentagsUpdate", "GutentagsToggleEnabled", "TagsUpdate", "TagsToggle" },
+		init = function()
+			-- 必须在插件 source 之前设,所以放 init
+			vim.g.gutentags_dont_load = 0
+		end,
 		config = require("plugins_config.gutentags").config,
 	},
 	-- debug ui

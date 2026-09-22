@@ -1,0 +1,684 @@
+let g:vimuser = 'mongia'
+let g:useremail = 'mongiaK@outlook.com'
+let g:urootmarks = ['.svn', '.git', '.root', '.hg', '.project', '.vscode', 'node_modules']
+" let $HTTP_PROXY =
+" let $HTTPS_PROXY =
+
+" 设置leader键（须在任何 <leader> 映射及插件加载前定义）
+let g:mapleader = "\<Space>"
+
+function! CheckPlugVim()
+    let s:plug_vim = expand('~/.vim/autoload/plug.vim')
+    if empty(glob(s:plug_vim))
+        silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        augroup vimrc_bootstrap
+            autocmd!
+            autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+        augroup END
+    endif
+    execute 'source' fnameescape(s:plug_vim)
+endfunction
+call CheckPlugVim()
+
+
+" 设置插件安装的git地址，github太慢了可改为镜像，例如 'https://your-mirror/%s.git'
+let g:plug_url_format = 'https://github.com/%s.git'
+" 插件安装目录（不要放进 autoload，那是 Vim 按需加载脚本的目录）
+call plug#begin(expand('~/.vim/plugged'))  " 表示插件安装在~/.vim/plugged 目录
+
+" 自动根据工程文件.svn .git等生成工程的tag索引
+Plug 'ludovicchabant/vim-gutentags'
+
+" 显示快捷键
+Plug 'liuchengxu/vim-which-key',  { 'on': ['WhichKey', 'WhichKey!'] }
+
+" 显示文件函数，变量
+Plug 'majutsushi/tagbar', {'on' : 'Tagbar'}
+
+" vim 配色库，很多种
+" Plug 'flazz/vim-colorschemes'
+Plug 'tomasr/molokai'
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+" Tokyo Night（Vim 移植版，非 Neovim 的 folke/tokyonight.nvim）
+Plug 'ghifarit53/tokyonight-vim'
+
+" 目录树
+Plug 'scrooloose/nerdtree', {'on': ['NERDTreeClose', 'NERDTree', 'NERDTreeToggle']}
+
+" 异步执行插件
+Plug 'skywind3000/asyncrun.vim'
+
+" 搜索工具
+Plug 'mileszs/ack.vim'
+
+Plug 'github/copilot.vim'
+
+" 语法检测工具（只做 lint，补全交给 vim-lsp + asyncomplete）
+Plug 'dense-analysis/ale'
+
+" vim go开发插件
+Plug 'fatih/vim-go', { 'for': 'go' }
+
+" 注释插件
+" Plug 'vim-scripts/DoxygenToolkit.vim'
+
+" 格式化插件，依赖于clangformat
+Plug 'rhysd/vim-clang-format', { 'for': ['c', 'cpp', 'cc', 'h', 'hpp'] }
+
+" vim 调试go工程插件
+Plug 'sebdah/vim-delve', { 'for': 'go' }
+
+" rust
+Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+
+" 替代tagbar
+Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
+
+" 补全插件
+Plug 'prabirshrestha/async.vim'
+
+" 利用 async.vim 做的补全，相当于一个补全引擎。
+Plug 'prabirshrestha/asyncomplete.vim'
+
+" Async Language Server Protocol plugin
+Plug 'prabirshrestha/vim-lsp'
+
+" 配合vim-lsp使用，自动配置lsp 识别设置
+Plug 'mattn/vim-lsp-settings'
+
+" 将 lsp 中的内容交给 asyncomplete 做补全
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+
+" vim markdown 文件插件
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+
+" markdown 文件预览
+Plug 'iamcco/markdown-preview.vim' , { 'for': 'markdown' }
+
+" 添加包围符号，比如‘ “ [ 等
+Plug 'tpope/vim-surround'
+
+" 自动匹配括号等
+Plug 'jiangmiao/auto-pairs'
+
+" 状态栏
+Plug 'vim-airline/vim-airline'
+
+" 显示函数参数
+Plug 'Shougo/echodoc.vim'
+
+" git 修改
+Plug 'tpope/vim-fugitive'
+
+" Plug 'kien/ctrlp.vim'
+
+" Plug 'sheerun/vim-polyglot'
+
+" 单词标亮
+Plug 'mongiaK/mark.vim'
+
+" 语法高亮
+"Plug 'jackguo380/vim-lsp-cxx-highlight'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'charlespascoe/vim-go-syntax', { 'for': 'go' }
+Plug 'yuezk/vim-js', { 'for': [ 'javascript', 'typescript', 'css' ] }
+Plug 'maxmellon/vim-jsx-pretty', { 'for': [ 'javascript', 'typescript', 'css' ] }
+
+"  浮动终端
+Plug 'voldikss/vim-floaterm'
+
+" 代码片段
+Plug 'honza/vim-snippets'
+
+" 新建文件自动套用文件头模板（替代自定义 SetTitle）
+Plug 'aperezdc/vim-template'
+
+call plug#end()
+
+" ==========================================================================
+" 基础选项（非插件）
+" ==========================================================================
+syntax on
+filetype plugin indent on
+if has('termguicolors') "开启终端gui真彩色
+    set termguicolors
+endif
+
+" 设置文件读的格式,终端格式等等
+set fileencodings=utf-8,gbk
+set termencoding=utf-8
+set fileencoding=utf-8
+set encoding=utf-8
+" 关闭兼容模式
+" set nocompatible
+" 切换 buffer 时保留未保存内容
+set hidden
+" 你输入查找内容的同时，vim就开始对你输入的内容进行匹配，并显示匹配的位置。打开这个选项，你可以即时看到查找的结果。
+set incsearch
+" 选项表示在查找时忽略大小写
+set ignorecase
+" 取消 set nowildmenu，将不能出现tab选择
+set wildmenu
+" 当检测到一个文件已经在Vim之外被更改，并且它没有在Vim的内部被更改时，自动读取它
+set autoread
+" 设置光标不要闪烁（仅 GUI 生效）
+set guicursor=a:block-blinkon0
+" 将状态行显示在窗口底部倒数第二行
+set laststatus=2
+" 底部的行号等显示
+set ruler
+" 行号显示(nu)
+set number
+" 高亮当前行(青色)
+set cursorline
+" 查询显示高亮
+set hlsearch
+" 使vi可以用退格键删除
+set backspace=indent,eol,start
+" 是vim不闪屏
+set novisualbell
+" 自动缩进时缩进为4格(sw)
+set shiftwidth=4
+" 启动折叠
+" set foldenable
+" 启用语法折叠
+" set foldmethod=syntax
+set nofoldenable
+" 语言设置
+set langmenu=zh_CN.UTF-8
+set helplang=cn
+" 高亮显示括号
+set showmatch
+set matchtime=5
+"  不换行
+set nowrap
+" #开启自动缩进   (ai)
+set autoindent
+" #编辑时可以将tab替换为空格(et)，输入的不再是tab，而是空格
+set expandtab
+" 设置tab等于4个空格
+set tabstop=4
+" 设置右下角显示完整命令
+" set showcmd
+" 设置c语言自动缩进
+set cindent
+" 设置鼠标可以在普通模式跟可视模式使用
+set mouse=nv
+" 设置tag索引文件查询目录，当使用gutentags时可以去掉该选项
+" set tags=tags,../tags,../../tags
+" 设置path路径，方便查询系统函数及库函数（C++ 索引交给 gutentags/clangd）
+set path=.,/usr/include,/usr/local/include
+
+set timeoutlen=300
+
+" ==========================================================================
+" 插件配置：每个插件一个函数，定义后立即 call
+" ==========================================================================
+
+" ---------- colorscheme（tokyonight / catppuccin / molokai） ----------
+function! ColorScheme()
+    " 配置须在 colorscheme 之前
+    let g:tokyonight_style = 'night' " night | storm
+    let g:tokyonight_enable_italic = 1
+    try
+        colorscheme tokyonight
+    catch
+        try
+            colorscheme catppuccin_mocha
+        catch
+            colorscheme default
+        endtry
+    endtry
+endfunction
+call ColorScheme()
+
+" ---------- vim-airline ----------
+function! Airline()
+    let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
+    let g:airline_theme='tokyonight'     " 设置主题（无 tokyonight 时可改回 dark）
+
+    " 开启tabline
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#left_sep = ' '
+    let g:airline#extensions#tabline#left_alt_sep = '|'
+    let g:airline#extensions#tabline#buffer_nr_show = 1
+endfunction
+call Airline()
+
+" ---------- NERDTree ----------
+function! Nerdtree()
+    " 右侧显示文件树
+    let g:NERDTreeWinPos=0
+    let g:NERDTreeHighlightCursorline = 1
+    augroup vimrc_nerdtree
+        autocmd!
+        autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+    augroup END
+    let g:NERDTreeDirArrowExpandable = '▸'
+    let g:NERDTreeDirArrowCollapsible = '▾'
+    let g:NERDTreeMinimalUI = 1
+    let g:NERDTreeDirArrows = 1
+    let g:NERDTreeShowBookmarks=1
+    let g:NERDTreeShowHidden=1
+
+    " 快捷键：新建/删除/重命名在树窗口内用内置 a / d / r
+    nmap <leader>e :NERDTreeToggle<CR>
+endfunction
+call Nerdtree()
+
+" ---------- tagbar ----------
+function! Tagbar()
+    let g:tagbar_left = 0
+    let g:tagbar_width = 30
+
+    nmap <leader>t :Tagbar<CR>
+endfunction
+call Tagbar()
+
+" ---------- ALE（只做 lint） ----------
+function! Ale()
+    let g:ale_completion_enabled = 0
+    let g:ale_sign_column_always = 0
+    let g:ale_set_highlights = 0
+    let g:ale_sign_error = '✗'
+    let g:ale_sign_warning = '⚡'
+    let g:ale_statusline_format = ['✗ %d', '⚡ %d', '✔ OK']
+    let g:ale_echo_msg_error_str = 'E'
+    let g:ale_echo_msg_warning_str = 'W'
+    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+
+    let g:ale_cpp_clang_options = '-std=c++11 -Wall'
+    let g:ale_cpp_gcc_options = '-std=c++11 -Wall'
+
+    let g:ale_c_parse_makefile = 1
+    let g:ale_c_parse_compile_commands = 1
+
+    let g:ale_lint_on_text_changed = 'never'
+    " let g:ale_lint_on_insert_leave = 1
+    " let g:ale_lint_on_enter = 1
+    " let g:ale_lint_on_save = 1
+
+    let g:ale_linters = {
+                \   'cpp': ['gcc'],
+                \   'c': ['gcc'],
+                \   'python': ['pylint'],
+                \   'go': ['gobuild', 'gofmt', 'staticcheck', 'golangci-lint'],
+                \   'javascript': ['eslint'],
+                \   'jsx': ['stylelint', 'eslint'],
+                \}
+    let g:ale_fixers = {
+                \   'javascript': ['prettier'],
+                \   'css': ['prettier'],
+                \   'jsx': ['prettier'],
+                \}
+
+    " 快捷键
+    nnoremap <leader>ap <Plug>(ale_previous_wrap)
+    nnoremap <leader>an <Plug>(ale_next_wrap)
+    nnoremap <leader>ad :ALEDetail<CR>
+    nnoremap <leader>ai :ALEInfo<CR>
+endfunction
+call Ale()
+
+" ---------- vim-go ----------
+function! VimGo()
+    let g:go_template_autocreate = 0
+    let g:go_template_file = ''
+    let g:go_highlight_fields = 1
+
+    " 快捷键
+    nmap <leader>gb :GoBuild<CR>
+    nmap <leader>gR :GoRun<CR>
+    nmap <leader>gi :GoImports<CR>
+endfunction
+call VimGo()
+
+" ---------- vim-clang-format ----------
+function! ClangFormat()
+    augroup vimrc_clangformat
+        autocmd!
+        autocmd FileType c,cpp,cc,h,hpp nmap <buffer> <leader>bf :ClangFormat<CR>
+    augroup END
+endfunction
+call ClangFormat()
+
+" ---------- vim-delve（go 调试） ----------
+function! VimDelve()
+    let g:delve_new_command = 'new'
+
+    nmap <leader>ga :DlvAddBreakpoint<CR>
+    nmap <leader>gr :DlvRemoveBreakpoint<CR>
+    nmap <leader>gd :DlvDebug<CR>
+endfunction
+call VimDelve()
+
+" ---------- LeaderF（注意：须在 GutenTags 之前 call） ----------
+function! LeaderF()
+    let g:Lf_WorkingDirectoryMode = 'AF'
+    let g:Lf_RootMarkers = g:urootmarks
+    let g:Lf_DefaultExternalTool = 'rg'
+    let g:Lf_WindowHeight = 0.30
+    let g:Lf_IgnoreCurrentBufferName = 1
+    let g:Lf_PreviewInPopup = 1
+    let g:Lf_PreviewResult = {
+        \ 'File': 0,
+        \ 'Buffer': 0,
+        \ 'Mru': 0,
+        \ 'Tag': 0,
+        \ 'BufTag': 1,
+        \ 'Function': 1,
+        \ 'Line': 1,
+        \ 'Colorscheme': 0,
+        \ 'Rg': 1,
+        \ 'Gtags': 0
+        \}
+    let g:Lf_PreviewHorizontalPosition = 'center'
+    let g:Lf_PreviewPopupWidth = &columns * 3 / 4
+    let g:Lf_WildIgnore={ 'file':['*.lib', '*.a', '*.o', '*.d', '*.so', ],'dir':['tmp', '.git', 'api', 'attachments', 'images', 'img', 'download', 'obj', 'node_modules' ]}
+
+    " 配合 vim-gutentags 使用
+    let g:Lf_GtagsAutoGenerate = 0
+    let g:Lf_GtagsGutentags = 1
+
+    if executable('gtags-cscope')
+        let g:Lf_ctags = 'gtags'
+    endif
+
+    if has('nvim')
+        let s:cachedir = expand(stdpath('cache'))
+    else
+        if has('win32')
+            let s:cachedir = expand('~/AppData/Local/Temp/cache/vim')
+        else
+            let s:cachedir = expand('~/.cache/vim')
+        endif
+    endif
+    let g:Lf_CacheDirectory = s:cachedir
+
+    let g:Lf_ShortcutF = '<leader>ff'
+    let g:Lf_ShortcutB = '<leader>fb'
+
+    " LeaderF 自带的 popup 主题名（不是 Vim colorscheme，可用内置 default/molokai 等）
+    let g:Lf_PopupColorscheme = 'molokai'
+    let g:Lf_StlColorscheme = 'molokai'
+    " 若 LeaderF 版本支持，也可试：'tokyonight'（失败则保持 molokai）
+
+    " 快捷键
+    nnoremap <silent> <leader>ff :Leaderf file<CR>
+    nnoremap <silent> <leader>fm :Leaderf mru<CR>
+    nnoremap <silent> <leader>fb :Leaderf buffer<CR>
+    nnoremap <silent> <leader>ft :LeaderfBufTag <CR>
+    nnoremap <silent> <leader>fr :Leaderf rg -w<CR>
+    noremap <leader>fs :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
+    noremap <leader>fw :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
+    noremap <leader>fc :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+    noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+    noremap <leader>fR :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
+    noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
+    noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
+endfunction
+call LeaderF()
+
+" ---------- vim-gutentags（依赖 LeaderF 的 g:Lf_CacheDirectory） ----------
+function! GutenTags()
+    let g:gutentags_project_root = g:urootmarks
+    let g:gutentags_ctags_tagfile = '.tags'
+
+    let g:gutentags_modules = []
+    if executable('ctags')
+            let g:gutentags_modules += ['ctags']
+    endif
+    if executable('gtags-cscope') && executable('gtags')
+            let g:gutentags_modules += ['gtags_cscope']
+    endif
+
+    let s:vim_tags = expand(g:Lf_CacheDirectory.'/LeaderF/gutentags')
+    let g:gutentags_cache_dir = s:vim_tags
+
+    " 调试开关
+    " let g:gutentags_trace = 1
+
+    let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+    let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+    let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+    let g:gutentags_ctags_exclude=['tmp', '.git', 'attachments', 'images', 'img', 'download', 'obj', 'node_modules']
+
+    if !isdirectory(s:vim_tags)
+        silent! call mkdir(s:vim_tags, 'p')
+    endif
+endfunction
+call GutenTags()
+
+" ---------- asyncrun.vim ----------
+function! AsyncRun()
+    let g:asyncrun_rootmarks = g:urootmarks
+    let g:asyncrun_open = 8
+
+    " 快捷键：F5 编译 / F6 开关 quickfix
+    nmap <silent> <F5> :AsyncRun -cwd=<root> make -j8 <CR>
+    nmap <silent> <F6> :call asyncrun#quickfix_toggle(8)<CR>
+endfunction
+call AsyncRun()
+
+" ---------- ack.vim ----------
+function! Ack()
+    cnoreabbrev Ack Ack!
+    if executable('rg')
+        let g:ackprg = 'rg --vimgrep'
+    endif
+
+    " 搜索光标下的单词（expand 会在执行时展开）
+    nnoremap <leader>bs :execute 'Ack! ' . expand('<cword>')<CR>
+endfunction
+call Ack()
+
+" ---------- vim-surround ----------
+function! Surround()
+    nmap <leader>sd <Plug>DSurround
+    nmap <leader>sc <Plug>CSurround
+    imap <leader>si <Plug>ISurround
+endfunction
+call Surround()
+
+" ---------- echodoc.vim ----------
+function! EchoDoc()
+    let g:echodoc#enable_at_startup = 1
+    let g:echodoc#type = 'popup'
+    highlight link EchoDocPopup Pmenu
+endfunction
+call EchoDoc()
+
+" ---------- asyncomplete（补全引擎 + 弹窗按键） ----------
+function! Asyncomplete()
+    let g:asyncomplete_auto_completeopt = 1
+    set completeopt=menuone,noinsert,noselect
+
+    " pumvisible: 补全弹窗存在返回非 0
+    inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+    inoremap <expr> <CR>    pumvisible() ? asyncomplete#close_popup() : "\<CR>"
+endfunction
+call Asyncomplete()
+
+" ---------- vim-lsp + vim-lsp-settings（LSP 客户端） ----------
+function! VimLsp()
+    let g:lsp_settings_servers_dir='~/.vim/vim-lsp-settings/servers'
+
+    augroup vimrc_lsp_servers
+        autocmd!
+        " 注册 python 的 lsp server
+        if executable('pyls')
+            autocmd User lsp_setup call lsp#register_server({
+            \ 'name': 'pyls',
+            \ 'cmd': {server_info->['pyls']},
+            \ 'whitelist': ['python'],
+            \ })
+        endif
+
+        " 注册 bash 的 lsp server
+        if executable('bash-language-server')
+            autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'bash-language-server',
+                \ 'cmd': {server_info->[&shell, &shellcmdflag, 'bash-language-server start']},
+                \ 'whitelist': ['sh'],
+                \ })
+        endif
+
+        if executable('clangd')
+            autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'clangd',
+                \ 'cmd': {server_info->['clangd']},
+                \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+                \ })
+        endif
+    augroup END
+endfunction
+call VimLsp()
+
+" ---------- vim-which-key ----------
+function! WhichKey()
+    noremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
+    let g:which_key_map = {}
+    let g:which_key_map = {
+                \'<F5>': 'call make in quickfix window',
+                \'<F6>': 'open/close quickfix windows',
+                \}
+    let g:which_key_map.b = {
+                \'name': 'basic shortkey',
+                \'f': 'format current file',
+                \'s': 'search current word in project',
+                \'q': 'q! quit file',
+                \'h': 'open *.h',
+                \'p': 'open *.cpp',
+                \'c': 'open *.c',
+                \}
+    let g:which_key_map.a = {
+                \'name': 'ale',
+                \'p': 'ale previous wrap',
+                \'n': 'ale next wrap',
+                \'d': 'ale detail',
+                \'i': 'ale info'
+                \}
+    let g:which_key_map.g = {
+                \'name': 'go debug',
+                \'b': 'go build',
+                \'R': 'go run',
+                \'i': 'go imports',
+                \'a': 'add break point',
+                \'r': 'remove breakpoint',
+                \'d': 'debug run'
+                \}
+    let g:which_key_map.f = {
+                \'name': 'leaderf',
+                \'f': 'search file',
+                \'m': 'search history file',
+                \'b': 'search buffer',
+                \'t': 'bug tagbar',
+                \'r': 'call rg search',
+                \'s': 'search current word in buf',
+                \'w': 'search current word in project',
+                \'c': 'search function reference and jump',
+                \'d': 'search function define and jump',
+                \'R': 'open gtags preview windows',
+                \'n': 'jump next gtags result',
+                \'p': 'jump preview gtags result'
+                \}
+    let g:which_key_map.s = {
+                \'name': 'surround',
+                \'d': 'delete surround key',
+                \'c': 'change surround key',
+                \'i': 'insert surround key'
+                \}
+    let g:which_key_map.n = {
+                \'name': 'NERDTree (在树窗口内用 a/d/r)',
+                \}
+
+    augroup vimrc_whichkey
+        autocmd!
+        autocmd User vim-which-key call which_key#register('<Space>', 'g:which_key_map')
+    augroup END
+endfunction
+call WhichKey()
+
+" ---------- vim-template（文件头模板） ----------
+function! TemplateZhDate()
+    return strftime("%Y年%m月%d日")
+endfunction
+
+function! VimTemplate()
+    let g:username = g:vimuser
+    let g:email = g:useremail
+    " 自定义模板目录（与 vimrc 同级的 templates/）
+    let g:templates_directory = [expand('<sfile>:p:h') . '/templates']
+    let g:templates_no_builtin_templates = 0
+    let g:templates_user_variables = [
+        \ ['ZHDATE', 'TemplateZhDate'],
+        \ ]
+endfunction
+call VimTemplate()
+
+" ---------- DoxygenToolkit（插件已注释，配置保留备用） ----------
+function! Doxygen()
+    let g:DoxygenToolkit_briefTag_funcName = "yes"
+    let g:DoxygenToolkit_commentType          = "C++"
+    let g:DoxygenToolkit_briefTag_pre         = "brief "
+    let g:DoxygenToolkit_templateParamTag_pre = "tparam "
+    let g:DoxygenToolkit_paramTag_pre         = "param "
+    let g:DoxygenToolkit_returnTag            = "return "
+    let g:DoxygenToolkit_throwTag_pre         = "throw "
+    let g:DoxygenToolkit_fileTag              = "file "
+    let g:DoxygenToolkit_dateTag              = "date "
+    let g:DoxygenToolkit_authorTag            = "author "
+    let g:DoxygenToolkit_versionTag           = "version "
+    let g:DoxygenToolkit_blockTag             = "name "
+    let g:DoxygenToolkit_classTag             = "class "
+    let g:DoxygenToolkit_authorName           = g:vimuser
+    let g:doxygen_enhanced_color              = 1
+    let g:DoxygenToolkit_blockHeader          = "/****************************************************************************"
+    let g:DoxygenToolkit_blockFooter          = "****************************************************************************/"
+    let g:DoxygenToolkit_startCommentTag      = ""
+    let g:DoxygenToolkit_interCommentTag      = "*"
+    let g:DoxygenToolkit_endCommentTag        = ""
+    let g:DoxygenToolkit_startCommentBlock    = ""
+    let g:DoxygenToolkit_interCommentBlock    = "* "
+    let g:DoxygenToolkit_endCommentBlock      = ""
+endfunction
+call Doxygen()
+
+" ---------- 基础快捷键（非插件） ----------
+"Command命令    常规模式        可视模式      运算符模式      插入模式        命令行模式
+":map               √           √               √
+":nmap              √
+":vmap                              √
+":omap                                              √
+":map!                                                              √           √
+":imap                                                              √
+":cmap                                                                              √
+" <Esc>代表Escape键:<CR>代表Enter键；<D>代表Command键。
+" Alt键可以使用<M-key>或<A-key>来表示。<C>代表Ctrl.
+" 对于组合键，可以用<C-Esc>代表Ctrl-Esc；使用<S-F1>表示Shift-F1
+" % 当前完整的文件名
+" %:h 文件名的头部，即文件目录.例如../path/test.c就会为../path
+" %:t 文件名的尾部.例如../path/test.c就会为test.c
+" %:r 无扩展名的文件名.例如../path/test就会成为test
+" %:p 绝对路径
+" %:e 扩展名
+" map 可以递归映射，noremap 非递归映射
+
+" 特殊参数
+" <buffer> : 映射只局限在当前缓冲区
+" <silent> : 执行按键绑定不再命令行显示
+" <special>: 用于定义特殊键怕有副作用的场合
+" <expr>   : 如果定义新映射的第一个参数是<expr>，那么参数会作为表达式来进行计算，结果使用实际使用的
+" <unique> : 检测新的键映射是否存在，存在则失败
+
+function! BasicShortKey()
+    nmap <leader>bq :q!<CR>
+    " 快捷键 配置 <C-R>插入寄存器数据，=是vim的特殊寄存器
+    nmap <leader>bh :vsp <C-R>=expand('%:p:r').'.h'<CR><CR>
+    nmap <leader>bp :vsp <C-R>=expand('%:p:r').'.cpp'<CR><CR>
+    nmap <leader>bc :vsp <C-R>=expand('%:p:r').'.c'<CR><CR>
+
+    nmap <C-p> :bp<CR>
+    nmap <C-n> :bn<CR>
+endfunction
+call BasicShortKey()

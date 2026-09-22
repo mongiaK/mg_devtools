@@ -1,0 +1,62 @@
+/*
+ * Wofi — follows mocha/latte via current.css, 70% frosted glass
+ * (Hyprland layer rule blurs namespace "wofi")
+ */
+
+@import "../colors/current.css";
+
+window {
+    margin: 0;
+    border: 1px solid alpha(@surface1, 0.7);
+    border-radius: 12px;
+    background-color: alpha(@base, 0.7);
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+    font-size: 14px;
+}
+
+#input {
+    margin: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: alpha(@surface0, 0.7);
+    color: @text;
+    border: none;
+    outline: none;
+}
+
+#inner-box {
+    margin: 0 12px 12px 12px;
+}
+
+#outer-box {
+    margin: 0;
+    border-radius: 12px;
+    background-color: transparent;
+}
+
+#scroll {
+    margin: 0;
+    border: none;
+}
+
+#text {
+    margin: 4px 8px;
+    color: @text;
+}
+
+#entry {
+    border-radius: 8px;
+    background-color: transparent;
+}
+
+#entry > image {
+    margin-right: 8px;
+}
+
+#entry:selected {
+    background-color: alpha(@mauve, 0.8);
+}
+
+#entry:selected #text {
+    color: @base;
+}

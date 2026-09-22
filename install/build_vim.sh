@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -x 
+set -e -x
 
 COLOR_RED='\033[0;31m'
 COLOR_ORANGE='\033[0;33m'
@@ -12,41 +12,41 @@ COLOR_BOLD='\033[1m'
 COLOR_NONE='\033[0m' # No Color
 
 function log_error {
-  >&2 echo -n -e "${COLOR_BOLD}${COLOR_RED}"
-  >&2 echo "🙈 【$@】"
-  >&2 echo -n -e "${COLOR_NONE}"
+    >&2 echo -n -e "${COLOR_BOLD}${COLOR_RED}"
+    >&2 echo "🙈 【$@】"
+    >&2 echo -n -e "${COLOR_NONE}"
 }
 
 function log_warning {
-  >&2 echo -n -e "${COLOR_ORANGE}"
-  >&2 echo "🙈 【$@】"
-  >&2 echo -n -e "${COLOR_NONE}"
+    >&2 echo -n -e "${COLOR_ORANGE}"
+    >&2 echo "🙈 【$@】"
+    >&2 echo -n -e "${COLOR_NONE}"
 }
 
 function log_callout {
-  >&2 echo -n -e "${COLOR_LIGHTCYAN}"
-  >&2 echo "🙈 【$@】"
-  >&2 echo -n -e "${COLOR_NONE}"
+    >&2 echo -n -e "${COLOR_LIGHTCYAN}"
+    >&2 echo "🙈 【$@】"
+    >&2 echo -n -e "${COLOR_NONE}"
 }
 
 function log_info {
-  >&2 echo -n -e "${COLOR_BLUE}"
-  >&2 echo "🙈 【$@】"
-  >&2 echo -n -e "${COLOR_NONE}"
+    >&2 echo -n -e "${COLOR_BLUE}"
+    >&2 echo "🙈 【$@】"
+    >&2 echo -n -e "${COLOR_NONE}"
 }
 
 function log_success {
-  >&2 echo -n -e "${COLOR_GREEN}"
-  >&2 echo "🙈 【$@】"
-  >&2 echo -n -e "${COLOR_NONE}"
+    >&2 echo -n -e "${COLOR_GREEN}"
+    >&2 echo "🙈 【$@】"
+    >&2 echo -n -e "${COLOR_NONE}"
 }
 
 function check_vim_version {
     if command -v vim >/dev/null 2>&1; then
-        vim_version=`vim --version | head -1 | awk -F' ' '{print $5}'`
+        vim_version=$(vim --version | head -1 | awk -F' ' '{print $5}')
         min_version=8
-        if [ `echo "$vim_version >= $min_version" | bc` -eq 1 ]; then
-        	log_info "your vim version is $vim_version"
+        if [ $(echo "$vim_version >= $min_version" | bc) -eq 1 ]; then
+            log_info "your vim version is $vim_version"
         else
             log_error "sorry, this script is not support vim less than version 8.0, your version is $vim_version !"
             exit 0
@@ -88,12 +88,11 @@ function check_result() {
 }
 
 function check_command() {
-    if ! command -v $1 >/dev/null 2>&1 ; then
-        log_error "$1 not found, please be sure you have install this";
+    if ! command -v $1 >/dev/null 2>&1; then
+        log_error "$1 not found, please be sure you have install this"
         exit 1
     fi
 }
-
 
 distributor_id=
 function get_os {
@@ -130,21 +129,27 @@ condition=
 function prepare_packages {
     case $distributor_id in
     Ubuntu)
-        packages=(silversearcher-ag ctags wget tmux clang-format)
-        exebin=(ag ctags wget tmux clang-format)
+        packages=(silversearcher-ag ctags wget tmux clang-format ripgrep global)
+        exebin=(ag ctags wget tmux clang-format rg gtags)
         pkgtools=apt
         condition="-y"
         ;;
     CentOS)
-        packages=(the_silver_searcher ctags wget tmux clang-format)
-        exebin=(ag ctags wget tmux clang-format)
+        packages=(the_silver_searcher ctags wget tmux clang-format ripgrep global)
+        exebin=(ag ctags wget tmux clang-format rg gtags)
         pkgtools=yum
         condition="-y"
         ;;
     MacOS)
-        packages=(the_silver_searcher ctags wget tmux clang-format)
-        exebin=(ag ctags wget tmux clang-format)
+        packages=(the_silver_searcher ctags wget tmux clang-format global)
+        exebin=(ag ctags wget tmux clang-format gtags)
         pkgtools=brew
+        ;;
+    Arch)
+        packages=(silversearcher-ag ctags wget tmux clang-format ripgrep global)
+        exebin=(ag ctags wget tmux clang-format rg gtags)
+        pkgtools=pacman
+        condition="-Syu"
         ;;
     *)
         log_warning "not support this system yet, sorry!"
@@ -161,13 +166,13 @@ function install_packages {
         exit 1
     fi
 
-    for ((i=0; i < ${#packages[@]}; i++)); do
-         if command -v ${exebin[$i]} >/dev/null 2>&1; then
-             log_success "${exebin[$i]} 已安装"
-         else
-             sudo $pkgtools install ${condition} ${packages[$i]}
-             check_result "${exebin[$i]}"
-         fi
+    for ((i = 0; i < ${#packages[@]}; i++)); do
+        if command -v ${exebin[$i]} >/dev/null 2>&1; then
+            log_success "${exebin[$i]} 已安装"
+        else
+            sudo $pkgtools install ${condition} ${packages[$i]}
+            check_result "${exebin[$i]}"
+        fi
     done
 }
 
@@ -175,24 +180,14 @@ function copy_config_to_user_dir {
     build_dir=/tmp/vimenv
     mkdir -p ${build_dir}
     pushd ${build_dir}
-    git clone https://hub.fastgit.xyz/junegunn/vim-plug.git
-    git clone https://hub.fastgit.xyz/PengMengJia/mg_devtools.git
-    
-    if [ -e "$HOME/.vim/autoload/plug.vim" ]; then
-        log_info "plug.vim 已存在"
-    else
-        mkdir -p ~/.vim/autoload
-        cp vim-plug/plug.vim ~/.vim/autoload/
-    fi
-    
+    git clone https://github.com/PengMengJia/mg_devtools.git
+
     if [ -e "$HOME/.vimrc" ]; then
         log_info ".vimrc 已存在"
     else
         cp mg_devtools/vim/.vimrc ~/
-        sed -i "" "s/god@sky.com/${email}/g" ~/.vimrc
-        sed -i "" "s/god/${author}/g" ~/.vimrc
     fi
-    
+
     if [ -e "$HOME/.tmux.conf" ]; then
         log_info ".tmux.conf 已存在"
     else
@@ -204,7 +199,7 @@ function copy_config_to_user_dir {
 
 function main {
     log_info "install vim develop env!"
- 
+
     get_os
 
     prepare_packages
@@ -217,7 +212,7 @@ function main {
 
     copy_config_to_user_dir
 
-    log_info "install develop env success! ( open vim run :PlugInstall ), if you have github.com error, maybe you can edit ~/.vim/autoload/plug.vim , change github.com with hub.fastgit.org" 
+    log_info "install develop env success! ( open vim run :PlugInstall ), if you have github.com error, maybe you can edit ~/.vim/autoload/plug.vim , change github.com with hub.fastgit.org"
 }
 
 main

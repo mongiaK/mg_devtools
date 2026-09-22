@@ -1,0 +1,10 @@
+width=35%
+height=40%
+location=center
+orientation=center
+allow_markup=true
+show=index
+insensitive=true
+prompt=搜索…
+no_actions=true
+image-size=24
