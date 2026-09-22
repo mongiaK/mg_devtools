@@ -191,7 +191,7 @@ function copy_config_to_user_dir {
     if [ -e "$HOME/.tmux.conf" ]; then
         log_info ".tmux.conf 已存在"
     else
-        cp mg_devtools/tmux/.tmux.conf ~/
+		cp mg_devtools/tmux/tmux.conf ~/.tmux.conf
     fi
     popd
     rm -rf ${build_dir}
