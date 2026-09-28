@@ -43,7 +43,10 @@ local p = palettes[name] or palettes.mocha
 hl.config({
 	general = {
 		col = {
-			active_border = { colors = p.active, angle = p.angle },
+			active_border = {
+				colors = p.active,
+				angle = p.angle,
+			},
 			inactive_border = p.inactive,
 		},
 	},
