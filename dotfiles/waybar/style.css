@@ -1,364 +1,172 @@
-/*
- * ============================================================
- * Waybar - single stylesheet (mocha <-> latte via current.css)
- * 70% frosted glass: alpha(@base, 0.7) + Hyprland layer blur
- * ============================================================
+/* ~/.config/waybar/style.css
+ * Catppuccin Latte — 磨砂透明版
+ * 半透明背景由这里的 alpha() 提供；真正的模糊虚化需要合成器配合，
+ * 见同目录 hyprland-blur.conf 里的 layer rule。
  */
 
-@import "../colors/current.css";
-
-
-/* ============================================================
- * Global
- * ============================================================ */
+@define-color base      #eff1f5;
+@define-color mantle    #e6e9ef;
+@define-color crust     #dce0e8;
+@define-color surface0  #ccd0da;
+@define-color surface1  #bcc0cc;
+@define-color surface2  #acb0be;
+@define-color overlay0  #9ca0b0;
+@define-color overlay1  #8c8fa1;
+@define-color subtext   #6c6f85;
+@define-color text      #4c4f69;
+@define-color lavender  #7287fd;
+@define-color mauve     #8839ef;
+@define-color pink      #ea76cb;
+@define-color red       #d20f39;
+@define-color maroon    #e64553;
+@define-color peach     #fe640b;
+@define-color yellow    #df8e1d;
+@define-color green     #40a02b;
+@define-color teal      #179299;
+@define-color sky       #04a5e5;
+@define-color blue      #1e66f5;
 
 * {
-    font-family:
-        "JetBrainsMono Nerd Font",
-        "Noto Sans",
-        sans-serif;
-
-    font-size: 13px;
-    font-weight: 600;
-
-    border: none;
-    border-radius: 0;
-
-    min-height: 0;
+  font-family: "JetBrainsMono Nerd Font", "Noto Sans CJK SC", sans-serif;
+  font-size: 14px;
+  min-height: 0;
 }
-
 
 window#waybar {
-    background: transparent;
-    color: @text;
+  background: transparent;
 }
 
-
-/* ============================================================
- * Main modules (glass)
- * ============================================================ */
-
-#custom-theme,
-#workspaces,
-#window,
-#clock,
-#custom-cpu,
-#custom-memory,
-#disk,
-#custom-network,
-#wireplumber,
-#bluetooth,
-#battery,
-#tray {
-
-    background: alpha(@base, 0.7);
-
-    margin-top: 7px;
-    margin-bottom: 7px;
-
-    padding: 0 12px;
-
-    border-radius: 12px;
-
-    transition:
-        background-color 0.2s ease,
-        color 0.2s ease;
+/* 磨砂玻璃底：低不透明度的浅色 + 细描边提亮边缘，
+   真实的虚化效果由合成器的 blur 图层完成，这里只负责"透" */
+.modules-left,
+.modules-center,
+.modules-right {
+  background: alpha(@base, 0.55);
+  border: 1px solid alpha(@text, 0.12);
+  border-radius: 16px;
+  padding: 0 6px;
+  margin: 0 2px;
+  box-shadow: 0 2px 10px alpha(@text, 0.08);
 }
 
-
-/* ============================================================
- * Theme toggle (sun / moon)
- * ============================================================ */
-
-#custom-theme {
-    margin-left: 5px;
-
-    padding: 0 12px;
-
-    color: @peach;
+/* ── Arch logo（最左，点击电源菜单） ──────────────────── */
+#custom-arch {
+  color: #1793d1;         /* Arch 官方品牌蓝，故意不用调色板里的蓝，保留辨识度 */
+  font-size: 17px;
+  padding: 0 14px;
+  border-radius: 999px;
+}
+#custom-arch:hover {
+  background: alpha(#1793d1, 0.18);
+  color: #12a4ff;
 }
 
-#custom-theme.latte {
-    color: @peach;
-}
-
-#custom-theme.mocha {
-    color: @sapphire;
-}
-
-#custom-theme:hover {
-    color: @mauve;
-}
-
-
-/* ============================================================
- * Left
- * ============================================================ */
-
+/* ── 工作区 ───────────────────────────────────────────── */
 #workspaces {
-    padding: 0 5px;
-
-    margin-left: 5px;
+  padding: 0 4px;
 }
-
 #workspaces button {
-    padding: 0 8px;
-
-    color: @overlay1;
-
-    background: transparent;
-
-    border-radius: 9px;
-
-    transition:
-        color 0.2s ease,
-        background-color 0.2s ease;
+  color: @overlay0;
+  background: transparent;
+  padding: 0 8px;
+  margin: 4px 2px;
+  border-radius: 999px;
+  min-width: 28px;
 }
-
 #workspaces button:hover {
-    color: @text;
-
-    background: alpha(@surface0, 0.7);
+  background: alpha(@surface1, 0.6);
+  color: @text;
 }
-
 #workspaces button.active {
-    color: @base;
-
-    background: @mauve;
-
-    min-width: 28px;
+  background: alpha(@mauve, 0.85);
+  color: @base;
+  font-weight: bold;
 }
-
 #workspaces button.urgent {
-    color: @base;
-
-    background: @red;
+  background: alpha(@red, 0.85);
+  color: @base;
 }
 
-
-/* ============================================================
- * Current window
- * ============================================================ */
-
+/* ── 窗口标题 ─────────────────────────────────────────── */
 #window {
-    margin-left: 6px;
-
-    color: @subtext1;
+  color: @subtext;
+  padding: 0 12px;
 }
 
-#window.empty {
-    background: transparent;
-}
-
-
-/* ============================================================
- * Center clock
- * ============================================================ */
-
+/* ── 时钟 ─────────────────────────────────────────────── */
 #clock {
-    padding-left: 16px;
-    padding-right: 16px;
-
-    color: @text;
+  color: @pink;
+  font-weight: bold;
+  padding: 0 14px;
 }
 
-#clock:hover {
-    color: @mauve;
+/* ── 通用胶囊模块（右侧一串） ─────────────────────────── */
+#tray,
+#custom-updates,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#battery,
+#custom-power {
+  padding: 0 10px;
+  margin: 4px 2px;
+  border-radius: 999px;
+  color: @text;
 }
 
+#custom-updates { color: @yellow; }
+#pulseaudio     { color: @teal; }
+#network        { color: @blue; }
+#cpu            { color: @green; }
+#memory         { color: @mauve; }
+#battery        { color: @green; }
 
-/* ============================================================
- * CPU
- * ============================================================ */
-
-#custom-cpu {
-    margin-left: 5px;
-
-    color: @blue;
-}
-
-#custom-cpu.warning {
-    color: @yellow;
-}
-
-#custom-cpu.critical {
-    color: @red;
-}
-
-
-/* ============================================================
- * Memory
- * ============================================================ */
-
-#custom-memory {
-    color: @teal;
-}
-
-#custom-memory.warning {
-    color: @yellow;
-}
-
-#custom-memory.critical {
-    color: @red;
-}
-
-
-/* ============================================================
- * Disk
- * ============================================================ */
-
-#disk {
-    color: @peach;
-}
-
-
-/* ============================================================
- * Network
- * ============================================================ */
-
-#custom-network {
-    color: @green;
-}
-
-#custom-network.disconnected {
-    color: @red;
-}
-
-
-/* ============================================================
- * Audio
- * ============================================================ */
-
-#wireplumber {
-    color: @pink;
-}
-
-#wireplumber.muted {
-    color: @overlay0;
-}
-
-
-/* ============================================================
- * Bluetooth
- * ============================================================ */
-
-#bluetooth {
-    color: @blue;
-}
-
-#bluetooth.disabled {
-    color: @overlay0;
-}
-
-#bluetooth.connected {
-    color: @sapphire;
-}
-
-
-/* ============================================================
- * Battery
- * ============================================================ */
-
-#battery {
-    color: @green;
-}
-
-#battery.warning {
-    color: @yellow;
-}
-
+#battery.warning  { color: @peach; }
 #battery.critical {
-    color: @red;
-
-    animation-name: blink;
-    animation-duration: 1s;
-    animation-timing-function: steps(12);
-    animation-iteration-count: infinite;
+  color: @red;
+  animation: blink 1s linear infinite;
+}
+@keyframes blink {
+  50% { opacity: 0.4; }
 }
 
-#battery.charging {
-    color: @green;
+#custom-updates:hover,
+#pulseaudio:hover,
+#network:hover,
+#cpu:hover,
+#memory:hover,
+#battery:hover {
+  background: alpha(@surface1, 0.55);
 }
 
-
-/* ============================================================
- * Tray
- * ============================================================ */
-
-#tray {
-    background: alpha(@mantle, 0.7);
-
-    margin-right: 5px;
-
-    padding: 0 9px;
-
-    border: 1px solid alpha(@surface0, 0.7);
+#custom-power {
+  color: @red;
+  font-size: 15px;
+  margin-right: 4px;
 }
-
-#tray:hover {
-    background: alpha(@surface0, 0.7);
-
-    border-color: @surface1;
+#custom-power:hover {
+  background: alpha(@red, 0.85);
+  color: @base;
 }
 
 #tray > .passive {
-    opacity: 0.6;
+  -gtk-icon-effect: dim;
 }
-
 #tray > .needs-attention {
-    opacity: 1;
+  -gtk-icon-effect: highlight;
+  background: alpha(@red, 0.85);
+  border-radius: 999px;
 }
 
-
-/* ============================================================
- * Hover
- * ============================================================ */
-
-#custom-cpu:hover,
-#custom-memory:hover,
-#disk:hover,
-#custom-network:hover,
-#wireplumber:hover,
-#bluetooth:hover,
-#battery:hover,
-#custom-theme:hover {
-
-    background: alpha(@surface0, 0.7);
-}
-
-
-/* ============================================================
- * Tooltip (glass)
- * ============================================================ */
-
+/* ── 悬浮提示框，同样是磨砂浅色 ───────────────────────── */
 tooltip {
-    background: alpha(@crust, 0.7);
-
-    border: 1px solid alpha(@surface1, 0.7);
-
-    border-radius: 12px;
-
-    padding: 10px 14px;
+  background: alpha(@base, 0.85);
+  border: 1px solid alpha(@mauve, 0.5);
+  border-radius: 10px;
+  padding: 4px;
 }
-
 tooltip label {
-    color: @text;
-
-    font-family:
-        "JetBrainsMono Nerd Font",
-        monospace;
-
-    font-size: 12px;
-}
-
-
-/* ============================================================
- * Animation
- * ============================================================ */
-
-@keyframes blink {
-    to {
-        color: @base;
-        background-color: @red;
-    }
+  color: @text;
+  padding: 4px 6px;
 }
